@@ -1,26 +1,43 @@
-version: "3.8"
-
+version: "3"
 services:
-  mysql:
-    image: mysql:8.0.23
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: admin
-    ports:
-      - 3306:3306
-
   postgres:
-    image: postgres:13.1
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: admin
+    container_name: postgres
+    image: postgres:latest
     ports:
-      - 5432:5432
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - docker.env
+    networks:
+      - postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d tennis_club"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  adminer:
-    image: adminer
-    restart: always
+  pgadmin:
+    links:
+      - postgres:postgres
+    container_name: pgadmin
+    image: dpage/pgadmin4
     ports:
-      - 8080:8080
+      - "8080:80"
+    volumes:
+      - pgadmin_data:/root/.pgadmin
+    env_file:
+      - docker.env
+    networks:
+      - postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
 
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  pgadmin_data:
