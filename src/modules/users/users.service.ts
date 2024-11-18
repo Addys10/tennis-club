@@ -19,6 +19,8 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
+    console.log('Vytvářím nového uživatele:', createUserDto.email);
+
     const existingUser = await this.usersRepository.findOne({
       where: { email: createUserDto.email },
     });
@@ -28,13 +30,17 @@ export class UsersService {
     }
 
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    console.log('Vytvořený hash hesla:', hashedPassword);
 
     const user = this.usersRepository.create({
       ...createUserDto,
       password: hashedPassword,
     });
 
-    return this.usersRepository.save(user);
+    const savedUser = await this.usersRepository.save(user);
+    console.log('Uživatel úspěšně uložen s ID:', savedUser.id);
+
+    return savedUser;
   }
 
   async findAll(): Promise<User[]> {
@@ -46,7 +52,15 @@ export class UsersService {
   }
 
   async findByEmail(email: string): Promise<User> {
-    return this.usersRepository.findOneBy({ email });
+    console.log('Hledám uživatele s emailem:', email);
+    const user = await this.usersRepository.findOne({
+      where: { email },
+    });
+    console.log('Nalezený uživatel:', user ? 'User found' : 'User not found');
+    if (user) {
+      console.log('Uložené heslo:', user.password);
+    }
+    return user;
   }
 
   async setPasswordResetToken(email: string): Promise<string> {
