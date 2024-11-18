@@ -1,13 +1,12 @@
+// src/app.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { User } from './entities/user.entity';
-import { Court } from './entities/court.entity';
-import { Booking } from './entities/booking.entity';
 import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { MailerModule } from './modules/mailer/mailer.module';
 import { CourtsModule } from './modules/courts/court.module';
 import { BookingsModule } from './modules/bookings/booking.module';
-import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -23,16 +22,16 @@ import { AuthModule } from './modules/auth/auth.module';
         username: configService.get('POSTGRES_USER'),
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DB'),
-        entities: [User, Court, Booking],
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
-        logging: true,
       }),
       inject: [ConfigService],
     }),
     UsersModule,
+    AuthModule,
     CourtsModule,
     BookingsModule,
-    AuthModule,
+    MailerModule,
   ],
 })
 export class AppModule {}
