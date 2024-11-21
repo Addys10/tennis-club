@@ -1,0 +1,28 @@
+.card {
+  width: 400px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  position: relative;
+}
+
+.tennis-ball {
+  width: 100px;
+  height: 100px;
+}
+
+.form-control {
+  &:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+  }
+}
+
+.login-btn {
+  background: linear-gradient(to right, #28a745, #20c997);
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+    transition: all 0.2s ease;
+  }
+}

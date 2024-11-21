@@ -1,0 +1,116 @@
+<div class="d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card shadow-lg border-0" style="width: 400px;">
+    <div class="card-body p-5">
+      <!-- Tenisový míček -->
+      <div class="text-center mb-4">
+        <img
+          src="assets/tennis-ball.jpeg"
+          alt="Tenisový míček"
+          style="width: 100px; height: 100px;"
+          class="mb-3"
+        >
+      </div>
+
+      <h2 class="text-center mb-4 fw-bold text-success">Registrace</h2>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div class="mb-3">
+          <label for="firstName" class="form-label">Jméno</label>
+          <input
+            formControlName="firstName"
+            type="text"
+            id="firstName"
+            class="form-control border-success-subtle"
+            placeholder="Zadejte jméno"
+          >
+          <div *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched"
+               class="text-danger small mt-1">
+            Jméno je povinné
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="lastName" class="form-label">Příjmení</label>
+          <input
+            formControlName="lastName"
+            type="text"
+            id="lastName"
+            class="form-control border-success-subtle"
+            placeholder="Zadejte příjmení"
+          >
+          <div *ngIf="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched"
+               class="text-danger small mt-1">
+            Příjmení je povinné
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input
+            formControlName="email"
+            type="email"
+            id="email"
+            class="form-control border-success-subtle"
+            placeholder="vas@email.cz"
+          >
+          <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+               class="text-danger small mt-1">
+            <span *ngIf="registerForm.get('email')?.errors?.['required']">Email je povinný</span>
+            <span *ngIf="registerForm.get('email')?.errors?.['email']">Neplatný formát emailu</span>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Heslo</label>
+          <input
+            formControlName="password"
+            type="password"
+            id="password"
+            class="form-control border-success-subtle"
+            placeholder="••••••••"
+          >
+          <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+               class="text-danger small mt-1">
+            <span *ngIf="registerForm.get('password')?.errors?.['required']">Heslo je povinné</span>
+            <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Heslo musí mít alespoň 6 znaků</span>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label for="confirmPassword" class="form-label">Potvrzení hesla</label>
+          <input
+            formControlName="confirmPassword"
+            type="password"
+            id="confirmPassword"
+            class="form-control border-success-subtle"
+            placeholder="••••••••"
+          >
+          <div *ngIf="registerForm.errors?.['mismatch']"
+               class="text-danger small mt-1">
+            Hesla se neshodují
+          </div>
+        </div>
+
+        <div *ngIf="error" class="alert alert-danger text-center mb-3">
+          {{ error }}
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="!registerForm.valid"
+          class="btn btn-success w-100 py-2"
+          style="background: linear-gradient(to right, #28a745, #20c997)"
+        >
+          Registrovat se
+        </button>
+
+        <div class="text-center mt-3">
+          <span class="text-muted">Již máte účet?</span>
+          <a routerLink="/auth/login" class="text-success text-decoration-none ms-2">
+            Přihlásit se
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

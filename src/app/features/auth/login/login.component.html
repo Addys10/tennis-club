@@ -1,0 +1,63 @@
+<div class="login-container min-vh-100 d-flex align-items-center justify-content-center">
+  <div class="card shadow-lg border-0">
+    <div class="card-body p-5">
+      <!-- Tenisový míček obrázek -->
+      <div class="text-center mb-4">
+        <img
+          src="assets/tennis-ball.jpeg"
+          alt="Tenisový míček"
+          class="tennis-ball mb-3"
+        >
+      </div>
+
+      <h2 class="text-center mb-4 fw-bold text-success">Tenisový klub</h2>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input
+            formControlName="email"
+            type="email"
+            class="form-control border-success-subtle"
+            id="email"
+            placeholder="vas@email.cz"
+          >
+          <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+               class="text-danger small mt-1">
+            Email je povinný
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label for="password" class="form-label">Heslo</label>
+          <input
+            formControlName="password"
+            type="password"
+            class="form-control border-success-subtle"
+            id="password"
+            placeholder="••••••••"
+          >
+          <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+               class="text-danger small mt-1">
+            Heslo je povinné
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="!loginForm.valid"
+          class="btn btn-success w-100 mb-3 py-2 login-btn"
+        >
+          Přihlásit se
+        </button>
+
+        <div class="text-center">
+          <span class="text-muted">Nemáte účet?</span>
+          <a routerLink="/auth/register" class="text-success text-decoration-none ms-2">
+            Registrovat se
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
