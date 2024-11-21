@@ -1,4 +1,4 @@
-# 🎾 Tenisový klub - Rezervační systém
+# 🎾 Tenisový klub 
 
 Moderní webová aplikace pro správu tenisových kurtů a rezervací. Systém umožňuje uživatelům snadno rezervovat tenisové kurty, spravovat své rezervace a sledovat dostupnost kurtů v reálném čase.
 
@@ -44,36 +44,6 @@ Moderní webová aplikace pro správu tenisových kurtů a rezervací. Systém u
 - PostgreSQL (v14 nebo vyšší)
 - Angular CLI
 
-### Backend Setup
-```bash
-# Přejít do backend složky
-cd backend
-
-# Instalace závislostí
-npm install
-
-# Nastavení prostředí
-cp .env.example .env
-# Upravte .env soubor podle vašich potřeb
-
-# Spuštění migrace databáze
-npm run migration:run
-
-# Spuštění serveru pro vývoj
-npm run start:dev
-```
-
-### Frontend Setup
-```bash
-# Přejít do frontend složky
-cd frontend
-
-# Instalace závislostí
-npm install
-
-# Spuštění vývojového serveru
-npm start
-```
 
 ## 📝 Konfigurace
 
