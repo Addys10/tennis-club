@@ -17,6 +17,11 @@ const routes: Routes = [
     path: '',
     redirectTo: '/dashboard',
     pathMatch: 'full'
+  },
+  {
+    path: 'trainings',
+    loadChildren: () => import('./features/trainings/trainings.module')
+      .then(m => m.TrainingsModule)
   }
 ];
 
