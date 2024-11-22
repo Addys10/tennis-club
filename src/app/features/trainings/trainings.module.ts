@@ -7,10 +7,20 @@ import {TrainingFormComponent} from '@features/trainings/training-form/training-
 import {TrainingDetailComponent} from '@features/trainings/training-detail/training-detail.component';
 
 const routes: Routes = [
-  {path: '', component: TrainingListComponent},
-  {path: 'create', component: TrainingFormComponent},
-  {path: ':id', component: TrainingDetailComponent}
+  {
+    path: '',
+    component: TrainingListComponent
+  },
+  {
+    path: 'create',
+    component: TrainingFormComponent
+  },
+  {
+    path: ':id',
+    component: TrainingDetailComponent
+  }
 ];
+
 
 @NgModule({
   declarations: [
