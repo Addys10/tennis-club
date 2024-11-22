@@ -1,26 +1,29 @@
 import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 import {Training} from '@core/models/training.model';
 import {TrainingService} from '@core/services/training.service';
 
 @Component({
-  selector: 'app-training-list',
-  templateUrl: './training-list.component.html',
-  styleUrls: ['./training-list.component.css']
+  selector: 'app-training-detail',
+  templateUrl: './training-detail.component.html',
+  styleUrls: ['./training-detail.component.html']
 })
-export class TrainingListComponent implements OnInit {
-  trainings: Training[] = [];
+export class TrainingDetailComponent implements OnInit {
+  training: Training | null = null;
 
-  constructor(private trainingService: TrainingService) {
+  constructor(
+    private route: ActivatedRoute,
+    private trainingService: TrainingService
+  ) {
   }
 
   ngOnInit(): void {
-    this.loadTrainings();
-  }
-
-  loadTrainings(): void {
-    this.trainingService.getAll().subscribe(
-      trainings => this.trainings = trainings
-    );
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.trainingService.getById(+id).subscribe(
+        training => this.training = training
+      );
+    }
   }
 
   getStatusClass(status: string): string {

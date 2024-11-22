@@ -4,7 +4,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
 import {TrainingListComponent} from '@features/trainings/training-list/training-list.component';
 import {TrainingFormComponent} from '@features/trainings/training-form/training-form.component';
-import {TrainingDetailComponent} from '@features/trainings/training-detail/training-detail';
+import {TrainingDetailComponent} from '@features/trainings/training-detail/training-detail.component';
 
 const routes: Routes = [
   {path: '', component: TrainingListComponent},
