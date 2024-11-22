@@ -10,6 +10,7 @@ import { User } from '../../entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
+import { UserRole } from '../../enums/user-role.enum';
 
 @Injectable()
 export class UsersService {
@@ -94,5 +95,43 @@ export class UsersService {
 
   async save(user: User): Promise<User> {
     return this.usersRepository.save(user);
+  }
+
+  async findAllCoaches(): Promise<User[]> {
+    return this.usersRepository.find({
+      where: { role: UserRole.COACH, isActive: true },
+    });
+  }
+
+  async updateCoachAvailability(id: number, availability: any): Promise<User> {
+    const coach = await this.findOne(id);
+    if (!coach || coach.role !== UserRole.COACH) {
+      throw new NotFoundException('Coach not found');
+    }
+
+    coach.availability = availability;
+    return this.usersRepository.save(coach);
+  }
+
+  async updateCoachSpecialization(
+    id: number,
+    specialization: string[],
+  ): Promise<User> {
+    const coach = await this.findOne(id);
+    if (!coach || coach.role !== UserRole.COACH) {
+      throw new NotFoundException('Coach not found');
+    }
+
+    coach.specialization = specialization;
+    return this.usersRepository.save(coach);
+  }
+
+  async getCoachStudentsCount(id: number): Promise<number> {
+    const coach = await this.findOne(id);
+    if (!coach || coach.role !== UserRole.COACH) {
+      throw new NotFoundException('Coach not found');
+    }
+    // Toto budeme implementovat později až budeme mít vazbu na tréninky
+    return 0;
   }
 }
