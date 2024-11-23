@@ -11,6 +11,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { UserRole } from '../../enums/user-role.enum';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -133,5 +134,36 @@ export class UsersService {
     }
     // Toto budeme implementovat později až budeme mít vazbu na tréninky
     return 0;
+  }
+
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    const user = await this.findOne(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Update user properties
+    Object.assign(user, updateUserDto);
+    return this.usersRepository.save(user);
+  }
+
+  async findAllWithFilters(filters: any = {}): Promise<User[]> {
+    return this.usersRepository.find({
+      where: filters,
+      order: {
+        lastName: 'ASC',
+        firstName: 'ASC',
+      },
+    });
+  }
+
+  async setRole(id: number, role: UserRole): Promise<User> {
+    const user = await this.findOne(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    user.role = role;
+    return this.usersRepository.save(user);
   }
 }

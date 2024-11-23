@@ -4,7 +4,15 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, Repository } from 'typeorm';
+import {
+  Between,
+  LessThan,
+  LessThanOrEqual,
+  MoreThan,
+  MoreThanOrEqual,
+  Not,
+  Repository,
+} from 'typeorm';
 import { Training } from '../../entities/training.entity';
 import { CreateTrainingDto } from './dto/create-training.dto';
 import { UsersService } from '../users/users.service';
@@ -127,5 +135,60 @@ export class TrainingsService {
       },
     });
     return !!conflictingTraining;
+  }
+
+  async cancelTraining(id: number): Promise<Training> {
+    const training = await this.findOne(id);
+    if (!training) {
+      throw new NotFoundException('Training not found');
+    }
+
+    training.status = TrainingStatus.CANCELLED;
+    return this.trainingRepository.save(training);
+  }
+
+  async updateStatus(id: number, status: TrainingStatus): Promise<Training> {
+    const training = await this.findOne(id);
+    if (!training) {
+      throw new NotFoundException('Training not found');
+    }
+
+    training.status = status;
+    return this.trainingRepository.save(training);
+  }
+
+  async getCurrentTrainings(): Promise<Training[]> {
+    const now = new Date();
+    return this.trainingRepository.find({
+      where: {
+        startTime: LessThanOrEqual(now),
+        endTime: MoreThanOrEqual(now),
+        status: Not(TrainingStatus.CANCELLED),
+      },
+      relations: ['coach', 'players', 'court'],
+    });
+  }
+
+  async getFutureTrainings(): Promise<Training[]> {
+    const now = new Date();
+    return this.trainingRepository.find({
+      where: {
+        startTime: MoreThan(now),
+        status: Not(TrainingStatus.CANCELLED),
+      },
+      relations: ['coach', 'players', 'court'],
+      order: { startTime: 'ASC' },
+    });
+  }
+
+  async getTrainingHistory(): Promise<Training[]> {
+    const now = new Date();
+    return this.trainingRepository.find({
+      order: { startTime: 'DESC' },
+      relations: ['coach', 'players', 'court'],
+      where: {
+        endTime: LessThan(now),
+      },
+    });
   }
 }

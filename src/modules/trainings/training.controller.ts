@@ -1,10 +1,20 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { TrainingsService } from './training.service';
 import { CreateTrainingDto } from './dto/create-training.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { UserRole } from '../../enums/user-role.enum';
+import { Training } from '../../entities/training.entity';
+import { TrainingStatus } from '../../enums/training-status.enum';
 
 @Controller('trainings')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -35,5 +45,33 @@ export class TrainingsController {
   @Get('player/:playerId')
   findByPlayer(@Param('playerId') playerId: string) {
     return this.trainingsService.findByPlayer(+playerId);
+  }
+
+  @Patch(':id/cancel')
+  async cancelTraining(@Param('id') id: string): Promise<Training> {
+    return this.trainingsService.cancelTraining(+id);
+  }
+
+  @Patch(':id/status')
+  async updateStatus(
+    @Param('id') id: string,
+    @Body('status') status: TrainingStatus,
+  ): Promise<Training> {
+    return this.trainingsService.updateStatus(+id, status);
+  }
+
+  @Get('current')
+  async getCurrentTrainings(): Promise<Training[]> {
+    return this.trainingsService.getCurrentTrainings();
+  }
+
+  @Get('future')
+  async getFutureTrainings(): Promise<Training[]> {
+    return this.trainingsService.getFutureTrainings();
+  }
+
+  @Get('history')
+  async getTrainingHistory(): Promise<Training[]> {
+    return this.trainingsService.getTrainingHistory();
   }
 }
