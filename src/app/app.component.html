@@ -10,7 +10,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" [ngClass]="{'show': !isNavbarCollapsed}">
+      <div class="collapse navbar-collapse" [class.show]="!isNavbarCollapsed">
         <!-- Levá část menu - pouze pro přihlášené -->
         <ul class="navbar-nav me-auto">
           <ng-container *ngIf="isAuthenticated">
@@ -27,6 +27,16 @@
             <li class="nav-item">
               <a class="nav-link" routerLink="/bookings" routerLinkActive="active">
                 Rezervace
+              </a>
+            </li><li class="nav-item">
+              <a class="nav-link" routerLink="/trainings" routerLinkActive="active">
+                Tréninky
+              </a>
+            </li>
+            <li class="nav-item" *ngIf="currentUser?.role === 'admin'">
+              <a class="nav-link" routerLink="/users">
+                <i class="bi bi-people"></i>
+                Správa uživatelů
               </a>
             </li>
           </ng-container>
@@ -50,7 +60,7 @@
           <li class="nav-item dropdown" *ngIf="isAuthenticated && currentUser">
             <a class="nav-link dropdown-toggle" href="#" role="button"
                data-bs-toggle="dropdown" aria-expanded="false">
-              {{ currentUser.email }}
+              {{ currentUser?.email }}
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
               <li>

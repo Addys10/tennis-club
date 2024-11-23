@@ -18,6 +18,70 @@
   <!-- Hlavní obsah -->
   <div class="container py-4">
     <div class="row g-4">
+      <!-- Moje tréninky -->
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <div class="rounded-circle bg-success bg-opacity-10 p-2 me-2">
+                <i class="bi bi-calendar-check text-success"></i>
+              </div>
+              <h5 class="card-title mb-0">Moje tréninky</h5>
+            </div>
+            <div class="list-group list-group-flush">
+              <!-- Příklad tréninku -->
+              <div class="list-group-item border-0 ps-0 pe-0">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="mb-1">24. listopadu 2024</h6>
+                    <small class="text-muted">15:00 - 16:00</small>
+                    <div class="mt-1">
+                      <span class="badge bg-primary me-1">Kurt 1</span>
+                      <span class="badge bg-secondary">Trenér: Jan Novák</span>
+                    </div>
+                  </div>
+                  <button class="btn btn-outline-danger btn-sm">
+                    <i class="bi bi-x-circle me-1"></i>
+                    Zrušit
+                  </button>
+                </div>
+              </div>
+
+              <!-- Další trénink -->
+              <div class="list-group-item border-0 ps-0 pe-0">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="mb-1">25. listopadu 2024</h6>
+                    <small class="text-muted">14:00 - 15:00</small>
+                    <div class="mt-1">
+                      <span class="badge bg-primary me-1">Kurt 2</span>
+                      <span class="badge bg-secondary">Trenér: Petr Svoboda</span>
+                    </div>
+                  </div>
+                  <button class="btn btn-outline-danger btn-sm">
+                    <i class="bi bi-x-circle me-1"></i>
+                    Zrušit
+                  </button>
+                </div>
+              </div>
+
+              <!-- Když nejsou žádné tréninky -->
+              <div *ngIf="trainings?.length === 0" class="text-center py-3 text-muted">
+                <i class="bi bi-calendar-x mb-2 fs-4"></i>
+                <p class="mb-0">Nemáte žádné naplánované tréninky</p>
+              </div>
+            </div>
+
+            <!-- Tlačítko pro přidání nového tréninku -->
+            <div class="text-center mt-3">
+              <button routerLink="/trainings/create" class="btn btn-success w-100">
+                <i class="bi bi-plus-circle me-2"></i>
+                Nový trénink
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- Moje rezervace -->
       <div class="col-md-4">
         <div class="card h-100 border-0 shadow-sm">

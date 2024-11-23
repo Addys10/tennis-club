@@ -1,0 +1,26 @@
+.table th {
+  font-weight: 600;
+  background-color: #f8f9fa;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.form-select-sm, .form-control-sm {
+  height: 31px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.badge {
+  font-weight: 500;
+}
+
+.btn-group .btn {
+  padding: 0.25rem 0.5rem;
+}
+
+.btn-group .bi {
+  font-size: 0.875rem;
+}

@@ -28,9 +28,9 @@ export class TrainingFormComponent implements OnInit {
     this.trainingForm = this.fb.group({
       startTime: ['', Validators.required],
       endTime: ['', Validators.required],
-      coachId: [null, Validators.required],
-      courtId: [null, Validators.required],
-      playerIds: [[]],
+      coachId: [null],
+      courtId: [null],
+      playerIds: [[null]],
       price: [0, [Validators.required, Validators.min(0)]],
       notes: [''],
       maxPlayers: [6]

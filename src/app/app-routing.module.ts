@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {DashboardComponent} from '@features/dashboard/dashboard.component';
 import {AuthGuard} from '@core/auth.guard';
+import {UserManagementComponent} from '@features/user-management/user-management.component';
 
 const routes: Routes = [
   // Veřejné routy
@@ -34,6 +35,11 @@ const routes: Routes = [
   {
     path: '**',
     redirectTo: '/dashboard'
+  },
+  {
+    path: 'users',
+    component: UserManagementComponent,
+    canActivate: [AuthGuard]
   }
 ];
 

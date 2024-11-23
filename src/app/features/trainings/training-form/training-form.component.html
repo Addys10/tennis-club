@@ -1,90 +1,116 @@
-<div class="container mx-auto p-4">
-  <div class="max-w-2xl mx-auto">
-    <h2 class="text-2xl font-bold mb-6">Nový trénink</h2>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h1 class="h3 mb-4">Nový trénink</h1>
 
-    <form [formGroup]="trainingForm" (ngSubmit)="onSubmit()" class="space-y-6">
-      <!-- Datum a čas -->
-      <div class="grid grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm font-medium mb-1">Začátek</label>
-          <input type="datetime-local"
-                 formControlName="startTime"
-                 class="w-full border rounded px-3 py-2">
+      <form [formGroup]="trainingForm" (ngSubmit)="onSubmit()" class="bg-white p-4 rounded shadow-sm">
+        <!-- Datum a čas -->
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label">Začátek</label>
+              <div class="input-group">
+                <input type="datetime-local"
+                       formControlName="startTime"
+                       class="form-control">
+                <span class="input-group-text">
+                  <i class="bi bi-calendar"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label">Konec</label>
+              <div class="input-group">
+                <input type="datetime-local"
+                       formControlName="endTime"
+                       class="form-control">
+                <span class="input-group-text">
+                  <i class="bi bi-calendar"></i>
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div>
-          <label class="block text-sm font-medium mb-1">Konec</label>
-          <input type="datetime-local"
-                 formControlName="endTime"
-                 class="w-full border rounded px-3 py-2">
+
+        <!-- Trenér -->
+        <div class="form-group mb-4">
+          <label class="form-label">Trenér</label>
+          <div class="input-group">
+            <select formControlName="coachId" class="form-select">
+              <option [ngValue]="null">Vyberte trenéra</option>
+              <option *ngFor="let coach of coaches" [value]="coach.id">
+                {{coach.firstName}} {{coach.lastName}}
+              </option>
+            </select>
+            <span class="input-group-text">
+              <i class="bi bi-person"></i>
+            </span>
+          </div>
         </div>
-      </div>
 
-      <!-- Trenér -->
-      <div>
-        <label class="block text-sm font-medium mb-1">Trenér</label>
-        <select formControlName="coachId"
-                class="w-full border rounded px-3 py-2">
-          <option [ngValue]="null">Vyberte trenéra</option>
-          <option *ngFor="let coach of coaches"
-                  [value]="coach.id">
-            {{ coach.firstName }} {{ coach.lastName }}
-          </option>
-        </select>
-      </div>
+        <!-- Kurt -->
+        <div class="form-group mb-4">
+          <label class="form-label">Kurt</label>
+          <div class="input-group">
+            <select formControlName="courtId" class="form-select">
+              <option [ngValue]="null">Vyberte kurt</option>
+              <option *ngFor="let court of courts" [value]="court.id">
+                {{court.name}}
+              </option>
+            </select>
+            <span class="input-group-text">
+              <i class="bi bi-geo-alt"></i>
+            </span>
+          </div>
+        </div>
 
-      <!-- Kurt -->
-      <div>
-        <label class="block text-sm font-medium mb-1">Kurt</label>
-        <select formControlName="courtId"
-                class="w-full border rounded px-3 py-2">
-          <option [ngValue]="null">Vyberte kurt</option>
-          <option *ngFor="let court of courts"
-                  [value]="court.id">
-            {{ court.name }}
-          </option>
-        </select>
-      </div>
+        <!-- Hráči -->
+        <div class="form-group mb-4">
+          <label class="form-label">Hráči</label>
+          <select multiple formControlName="playerIds" class="form-select" size="4">
+            <option *ngFor="let player of players" [value]="player.id">
+              {{player.firstName}} {{player.lastName}}
+            </option>
+          </select>
+        </div>
 
-      <!-- Hráči -->
-      <div>
-        <label class="block text-sm font-medium mb-1">Hráči</label>
-        <select multiple formControlName="playerIds"
-                class="w-full border rounded px-3 py-2">
-          <option *ngFor="let player of players"
-                  [value]="player.id">
-            {{ player.firstName }} {{ player.lastName }}
-          </option>
-        </select>
-      </div>
+        <!-- Cena -->
+        <div class="form-group mb-4">
+          <label class="form-label">Cena</label>
+          <div class="input-group">
+            <input type="number"
+                   formControlName="price"
+                   class="form-control">
+            <span class="input-group-text">Kč</span>
+          </div>
+        </div>
 
-      <!-- Cena -->
-      <div>
-        <label class="block text-sm font-medium mb-1">Cena</label>
-        <input type="number"
-               formControlName="price"
-               class="w-full border rounded px-3 py-2">
-      </div>
+        <!-- Poznámky -->
+        <div class="form-group mb-4">
+          <label class="form-label">Poznámky</label>
+          <textarea formControlName="notes"
+                    class="form-control"
+                    rows="3"></textarea>
+        </div>
 
-      <!-- Poznámky -->
-      <div>
-        <label class="block text-sm font-medium mb-1">Poznámky</label>
-        <textarea formControlName="notes"
-                  class="w-full border rounded px-3 py-2 h-24"></textarea>
-      </div>
-
-      <!-- Tlačítka -->
-      <div class="flex justify-end space-x-4">
-        <button type="button"
-                routerLink="/trainings"
-                class="px-4 py-2 border rounded hover:bg-gray-100">
-          Zrušit
-        </button>
-        <button type="submit"
-                [disabled]="!trainingForm.valid"
-                class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50">
-          Vytvořit
-        </button>
-      </div>
-    </form>
+        <!-- Tlačítka -->
+        <div class="d-flex justify-content-end gap-2">
+          <button type="button"
+                  routerLink="/trainings"
+                  class="btn btn-outline-secondary">
+            <i class="bi bi-x-circle me-2"></i>
+            Zrušit
+          </button>
+          <button type="submit"
+                  [disabled]="!trainingForm.valid"
+                  class="btn btn-success">
+            <i class="bi bi-check-circle me-2"></i>
+            Vytvořit
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>

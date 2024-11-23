@@ -1,0 +1,74 @@
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Správa uživatelů</h2>
+  </div>
+
+  <!-- Loading spinner -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Načítání...</span>
+    </div>
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="error" class="alert alert-danger" role="alert">
+    {{ error }}
+  </div>
+
+  <!-- Users table -->
+  <div class="card" *ngIf="!loading && !error">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th>Jméno</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Telefon</th>
+            <th>Status</th>
+            <th>Akce</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.firstName }} {{ user.lastName }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <select class="form-select form-select-sm"
+                      [(ngModel)]="user.role"
+                      (change)="updateRole(user.id, user.role)">
+                <option value="member">Člen</option>
+                <option value="coach">Trenér</option>
+                <option value="admin">Admin</option>
+              </select>
+            </td>
+            <td>
+              <input type="text"
+                     class="form-control form-control-sm"
+                     [(ngModel)]="user.phone"
+                     (blur)="updateUser(user)"
+                     placeholder="Telefon">
+            </td>
+            <td>
+                <span [class]="user.isActive ? 'badge bg-success' : 'badge bg-danger'">
+                  {{ user.isActive ? 'Aktivní' : 'Neaktivní' }}
+                </span>
+            </td>
+            <td>
+              <div class="btn-group">
+                <button class="btn btn-sm btn-outline-primary">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger ms-2">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
