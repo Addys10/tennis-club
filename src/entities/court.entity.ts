@@ -14,6 +14,15 @@ export class Court {
   @Column({ default: true })
   isAvailable: boolean;
 
+  @Column({ nullable: true })
+  isActive: boolean;
+
+  @Column({ nullable: true })
+  description: string;
+
+  @Column({ nullable: true })
+  hourlyRate: number;
+
   @Column('jsonb', {
     nullable: true, // Důležité - umožní null hodnoty pro existující záznamy
   })
