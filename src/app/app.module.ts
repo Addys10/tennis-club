@@ -5,14 +5,14 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {AuthModule} from '@features/auth/auth.module';
 import {DashboardModule} from '@features/dashboard/dashboard.module';
-import {UserManagementComponent} from '@features/user-management/user-management.component';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {JwtInterceptor} from '@core/jwt.interceptor';
+import {UserManagementModule} from '@features/user-management/user-management.module';
 
 @NgModule({
-  declarations: [AppComponent, UserManagementComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -22,7 +22,7 @@ import {JwtInterceptor} from '@core/jwt.interceptor';
     FormsModule,
     CommonModule,
     RouterModule,
-
+    UserManagementModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

@@ -1,116 +1,87 @@
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <h1 class="h3 mb-4">Nový trénink</h1>
+<div class="container">
+  <div class="form-wrapper">
+    <h1 class="form-title">Nový trénink</h1>
 
-      <form [formGroup]="trainingForm" (ngSubmit)="onSubmit()" class="bg-white p-4 rounded shadow-sm">
-        <!-- Datum a čas -->
-        <div class="row mb-4">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label class="form-label">Začátek</label>
-              <div class="input-group">
-                <input type="datetime-local"
-                       formControlName="startTime"
-                       class="form-control">
-                <span class="input-group-text">
-                  <i class="bi bi-calendar"></i>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label class="form-label">Konec</label>
-              <div class="input-group">
-                <input type="datetime-local"
-                       formControlName="endTime"
-                       class="form-control">
-                <span class="input-group-text">
-                  <i class="bi bi-calendar"></i>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
+    <form [formGroup]="trainingForm" (ngSubmit)="onSubmit()">
+      <!-- Error message -->
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
 
-        <!-- Trenér -->
-        <div class="form-group mb-4">
-          <label class="form-label">Trenér</label>
-          <div class="input-group">
-            <select formControlName="coachId" class="form-select">
-              <option [ngValue]="null">Vyberte trenéra</option>
-              <option *ngFor="let coach of coaches" [value]="coach.id">
-                {{coach.firstName}} {{coach.lastName}}
-              </option>
-            </select>
-            <span class="input-group-text">
-              <i class="bi bi-person"></i>
-            </span>
-          </div>
+      <!-- Coach selection -->
+      <div class="form-group">
+        <label class="form-label">Trenér</label>
+        <select formControlName="coachId" class="form-control">
+          <option value="">Vyberte trenéra</option>
+          <option *ngFor="let coach of coaches" [value]="coach.id">
+            {{coach.firstName}} {{coach.lastName}}
+          </option>
+        </select>
+        <div *ngIf="submitted && trainingForm.get('coachId')?.errors" class="validation-error">
+          Vyberte trenéra
         </div>
+      </div>
 
-        <!-- Kurt -->
-        <div class="form-group mb-4">
-          <label class="form-label">Kurt</label>
-          <div class="input-group">
-            <select formControlName="courtId" class="form-select">
-              <option [ngValue]="null">Vyberte kurt</option>
-              <option *ngFor="let court of courts" [value]="court.id">
-                {{court.name}}
-              </option>
-            </select>
-            <span class="input-group-text">
-              <i class="bi bi-geo-alt"></i>
-            </span>
-          </div>
+      <!-- Court selection -->
+      <div class="form-group">
+        <label class="form-label">Kurt</label>
+        <select formControlName="courtId" class="form-control">
+          <option value="">Vyberte kurt</option>
+          <option *ngFor="let court of courts" [value]="court.id">
+            {{court.name}}
+          </option>
+        </select>
+        <div *ngIf="submitted && trainingForm.get('courtId')?.errors" class="validation-error">
+          Vyberte kurt
         </div>
+      </div>
 
-        <!-- Hráči -->
-        <div class="form-group mb-4">
-          <label class="form-label">Hráči</label>
-          <select multiple formControlName="playerIds" class="form-select" size="4">
-            <option *ngFor="let player of players" [value]="player.id">
-              {{player.firstName}} {{player.lastName}}
-            </option>
-          </select>
+      <!-- Date and time -->
+      <div class="date-time-group">
+        <div class="form-group">
+          <label class="form-label">Začátek</label>
+          <input type="datetime-local" formControlName="startTime" class="form-control">
         </div>
+        <div class="form-group">
+          <label class="form-label">Konec</label>
+          <input type="datetime-local" formControlName="endTime" class="form-control">
+        </div>
+      </div>
 
-        <!-- Cena -->
-        <div class="form-group mb-4">
-          <label class="form-label">Cena</label>
-          <div class="input-group">
-            <input type="number"
-                   formControlName="price"
-                   class="form-control">
-            <span class="input-group-text">Kč</span>
-          </div>
-        </div>
+      <!-- Players -->
+      <div class="form-group">
+        <label class="form-label">Hráči</label>
+        <select multiple formControlName="playerIds" class="form-control">
+          <option *ngFor="let player of players" [value]="player.id">
+            {{player.firstName}} {{player.lastName}}
+          </option>
+        </select>
+      </div>
 
-        <!-- Poznámky -->
-        <div class="form-group mb-4">
-          <label class="form-label">Poznámky</label>
-          <textarea formControlName="notes"
-                    class="form-control"
-                    rows="3"></textarea>
+      <!-- Price -->
+      <div class="form-group">
+        <label class="form-label">Cena za osobu</label>
+        <div class="price-input">
+          <input type="number" formControlName="price" class="form-control">
         </div>
+      </div>
 
-        <!-- Tlačítka -->
-        <div class="d-flex justify-content-end gap-2">
-          <button type="button"
-                  routerLink="/trainings"
-                  class="btn btn-outline-secondary">
-            <i class="bi bi-x-circle me-2"></i>
-            Zrušit
-          </button>
-          <button type="submit"
-                  [disabled]="!trainingForm.valid"
-                  class="btn btn-success">
-            <i class="bi bi-check-circle me-2"></i>
-            Vytvořit
-          </button>
-        </div>
-      </form>
-    </div>
+      <!-- Notes -->
+      <div class="form-group">
+        <label class="form-label">Poznámky</label>
+        <textarea formControlName="notes" class="form-control" rows="3"></textarea>
+      </div>
+
+      <!-- Buttons -->
+      <div class="btn-group">
+        <button type="button" class="btn btn-cancel" routerLink="/trainings">
+          Zrušit
+        </button>
+        <button type="submit" class="btn btn-submit" [disabled]="loading">
+          <span *ngIf="loading" class="spinner"></span>
+          {{ loading ? 'Ukládám...' : 'Vytvořit trénink' }}
+        </button>
+      </div>
+    </form>
   </div>
 </div>

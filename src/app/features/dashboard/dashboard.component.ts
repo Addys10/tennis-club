@@ -27,7 +27,14 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    // Sledování přihlášeného uživatele
+    this.authService.currentUser$.pipe(
+      takeUntil(this.destroy$),
+      filter(user => !!user)
+    ).subscribe(user => {
+      this.currentUser = user;
+      this.loadTrainings();
+    });
   }
 
   loadTrainings(): void {

@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthService} from '@core/services/auth.service';
 import {User} from '@core/models/auth.model';
+import {UserRole} from '@core/models/user.model';
 
 @Component({
   selector: 'app-root',
@@ -34,5 +35,9 @@ export class AppComponent implements OnInit {
   logout() {
     this.authService.logout();
     this.router.navigate(['/auth/login']);
+  }
+
+  get isAdmin(): boolean {
+    return this.currentUser?.role === UserRole.ADMIN;
   }
 }

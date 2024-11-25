@@ -16,7 +16,7 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/api/auth/login`, {
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, {
       email,
       password
     }).pipe(
@@ -40,7 +40,16 @@ export class AuthService {
   private loadUserFromToken(): void {
     const token = localStorage.getItem('token');
     if (token) {
-      // Implementovat získání user profilu z BE
+      // Přidáme volání na backend pro získání user profilu
+      this.http.get<User>(`${environment.apiUrl}/auth/profile`).subscribe({
+        next: (user) => {
+          this.currentUserSubject.next(user);
+        },
+        error: () => {
+          // Pokud selže načtení profilu, vymažeme token
+          this.logout();
+        }
+      });
     }
   }
 
@@ -54,7 +63,7 @@ export class AuthService {
   }
 
   register(userData: any): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/api/auth/register`, userData)
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, userData)
       .pipe(
         tap(response => this.handleAuthSuccess(response))
       );

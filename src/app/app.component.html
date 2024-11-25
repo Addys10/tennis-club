@@ -25,16 +25,12 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" routerLink="/bookings" routerLinkActive="active">
-                Rezervace
-              </a>
-            </li><li class="nav-item">
               <a class="nav-link" routerLink="/trainings" routerLinkActive="active">
                 Tréninky
               </a>
             </li>
             <li class="nav-item" *ngIf="currentUser?.role === 'admin'">
-              <a class="nav-link" routerLink="/users">
+              <a class="nav-link" routerLink="/users" routerLinkActive="active">
                 <i class="bi bi-people"></i>
                 Správa uživatelů
               </a>
@@ -60,7 +56,7 @@
           <li class="nav-item dropdown" *ngIf="isAuthenticated && currentUser">
             <a class="nav-link dropdown-toggle" href="#" role="button"
                data-bs-toggle="dropdown" aria-expanded="false">
-              {{ currentUser?.email }}
+              {{ currentUser.email }}
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
               <li>
@@ -69,11 +65,8 @@
                 </a>
               </li>
               <li>
-                <a class="dropdown-item" routerLink="/bookings">
-                  Moje rezervace
-                </a>
+                <hr class="dropdown-divider">
               </li>
-              <li><hr class="dropdown-divider"></li>
               <li>
                 <a class="dropdown-item" (click)="logout()">
                   Odhlásit se

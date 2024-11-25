@@ -24,3 +24,40 @@
 .btn-group .bi {
   font-size: 0.875rem;
 }
+
+/* Nové styly pro vytvoření uživatele */
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal.show {
+  display: block;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.text-danger {
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.btn-success {
+  background: linear-gradient(to right, #28a745, #20c997);
+  border: none;
+  padding: 0.5rem 1.5rem;
+  transition: all 0.2s;
+}
+
+.btn-success:hover {
+  background: linear-gradient(to right, #218838, #1e7e34);
+  transform: translateY(-1px);
+}
+
+.bi {
+  font-size: 1.1rem;
+  vertical-align: -0.125em;
+}

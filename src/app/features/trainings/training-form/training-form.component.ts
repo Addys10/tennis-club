@@ -1,11 +1,14 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-import {User, UserRole} from '@core/models/user.model';
-import {Court} from '@core/models/court.model';
-import {TrainingService} from '@core/services/training.service';
-import {UserService} from '@core/services/user.service';
-import {CourtService} from '@core/services/court.service';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { User, UserRole } from '@core/models/user.model';
+import { Court } from '@core/models/court.model';
+import { TrainingService } from '@core/services/training.service';
+import { UserService } from '@core/services/user.service';
+import { CourtService } from '@core/services/court.service';
+import { TrainingStatus } from '@core/models/training.model';
+import { BehaviorSubject, combineLatest, map } from 'rxjs';
+import {ITimeSlot, ITrainingFormData} from '@features/trainings/training-form/training.form';
 
 @Component({
   selector: 'app-training-form',
@@ -13,10 +16,32 @@ import {CourtService} from '@core/services/court.service';
   styleUrls: ['./training-form.component.css']
 })
 export class TrainingFormComponent implements OnInit {
-  trainingForm: FormGroup;
+  trainingForm!: FormGroup;
   coaches: User[] = [];
   courts: Court[] = [];
   players: User[] = [];
+  loading = false;
+  submitted = false;
+  errorMessage = '';
+
+  // Pro reaktivní UI
+  private selectedCoachSubject = new BehaviorSubject<number | null>(null);
+  private selectedCourtSubject = new BehaviorSubject<number | null>(null);
+  private selectedDateSubject = new BehaviorSubject<Date | null>(null);
+
+  // Computed properties
+  availableTimeSlots$ = combineLatest([
+    this.selectedCoachSubject,
+    this.selectedCourtSubject,
+    this.selectedDateSubject
+  ]).pipe(
+    map(([coachId, courtId, date]) => {
+      if (coachId && courtId && date) {
+        return this.calculateAvailableTimeSlots(coachId, courtId, date);
+      }
+      return [];
+    })
+  );
 
   constructor(
     private fb: FormBuilder,
@@ -25,15 +50,46 @@ export class TrainingFormComponent implements OnInit {
     private courtService: CourtService,
     private router: Router
   ) {
+    this.initForm();
+  }
+
+  private initForm(): void {
     this.trainingForm = this.fb.group({
-      startTime: ['', Validators.required],
-      endTime: ['', Validators.required],
-      coachId: [null],
-      courtId: [null],
-      playerIds: [[null]],
+      startTime: ['', [Validators.required]],
+      endTime: ['', [Validators.required]],
+      coachId: [null, [Validators.required]],
+      courtId: [null, [Validators.required]],
+      playerIds: [[]],
       price: [0, [Validators.required, Validators.min(0)]],
       notes: [''],
-      maxPlayers: [6]
+      maxPlayers: [6, [Validators.required, Validators.min(1), Validators.max(6)]],
+      status: [TrainingStatus.PLANNED]
+    });
+
+    // Sledování změn pro výpočet ceny
+    this.trainingForm.get('coachId')?.valueChanges.subscribe(id => {
+      this.selectedCoachSubject.next(id);
+      this.updatePrice();
+    });
+
+    this.trainingForm.get('courtId')?.valueChanges.subscribe(id => {
+      this.selectedCourtSubject.next(id);
+      this.updatePrice();
+    });
+
+    this.trainingForm.get('startTime')?.valueChanges.subscribe(date => {
+      if (date) {
+        this.selectedDateSubject.next(new Date(date));
+      }
+      this.updatePrice();
+    });
+
+    this.trainingForm.get('endTime')?.valueChanges.subscribe(() => {
+      this.updatePrice();
+    });
+
+    this.trainingForm.get('playerIds')?.valueChanges.subscribe(() => {
+      this.updatePrice();
     });
   }
 
@@ -42,30 +98,81 @@ export class TrainingFormComponent implements OnInit {
   }
 
   private loadData(): void {
-    this.userService.getAllCoaches().subscribe(
-      coaches => this.coaches = coaches
+    this.loading = true;
+
+    combineLatest([
+      this.userService.getAllCoaches(),
+      this.courtService.getAll(),
+      this.userService.getAll()
+    ]).subscribe({
+      next: ([coaches, courts, users]) => {
+        this.coaches = coaches.filter(coach => coach.isActive);
+        this.courts = courts.filter(court => court.isActive);
+        this.players = users.filter(user =>
+          user.role === UserRole.PLAYER && user.isActive
+        );
+        this.loading = false;
+      },
+      error: (error) => {
+        this.errorMessage = 'Chyba při načítání dat';
+        this.loading = false;
+        console.error('Error loading data:', error);
+      }
+    });
+  }
+
+  private updatePrice(): void {
+    const formValue = this.trainingForm.value;
+    if (!formValue.startTime || !formValue.endTime || !formValue.coachId) return;
+
+    const coach = this.coaches.find(c => c.id === formValue.coachId);
+    const duration = this.calculateDurationInHours(
+      new Date(formValue.startTime),
+      new Date(formValue.endTime)
     );
 
-    this.courtService.getAll().subscribe(
-      courts => this.courts = courts
-    );
+    if (coach && coach.hourlyRate) {
+      const basePrice = coach.hourlyRate * duration;
+      const playerCount = formValue.playerIds?.length || 0;
+      const pricePerPlayer = basePrice / (playerCount || 1);
 
-    this.userService.getAll().subscribe(
-      users => this.players = users.filter(u => u.role === UserRole.PLAYER)
-    );
+      this.trainingForm.patchValue({
+        price: Math.round(pricePerPlayer)
+      }, { emitEvent: false });
+    }
+  }
+
+  private calculateDurationInHours(start: Date, end: Date): number {
+    return (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+  }
+
+  private calculateAvailableTimeSlots(coachId: number, courtId: number, date: Date): Promise<ITimeSlot[]> {
+    // Implementace výpočtu dostupných časových slotů
+    // Toto by mělo být ideálně na backendu
+    return Promise.resolve([]);
   }
 
   onSubmit(): void {
+    this.submitted = true;
+
     if (this.trainingForm.valid) {
-      this.trainingService.create(this.trainingForm.value).subscribe({
+      this.loading = true;
+      const formData: ITrainingFormData = this.trainingForm.value;
+
+      this.trainingService.create(formData).subscribe({
         next: () => {
           this.router.navigate(['/trainings']);
         },
         error: (error) => {
+          this.errorMessage = 'Chyba při vytváření tréninku';
+          this.loading = false;
           console.error('Error creating training:', error);
-          // Zde můžete přidat zobrazení chybové hlášky uživateli
         }
       });
     }
+  }
+
+  canDeactivate(): boolean {
+    return !this.trainingForm.dirty || confirm('Máte neuložené změny. Chcete opravdu odejít?');
   }
 }

@@ -23,7 +23,12 @@ const routes: Routes = [
       .then(m => m.TrainingsModule),
     canActivate: [AuthGuard]  // přidaný AuthGuard
   },
-
+  {
+    path: 'users',
+    component: UserManagementComponent,
+    canActivate: [AuthGuard],
+    data: {role: 'admin'}
+  },
   // Default routa
   {
     path: '',
@@ -36,15 +41,11 @@ const routes: Routes = [
     path: '**',
     redirectTo: '/dashboard'
   },
-  {
-    path: 'users',
-    component: UserManagementComponent,
-    canActivate: [AuthGuard]
-  }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+}
