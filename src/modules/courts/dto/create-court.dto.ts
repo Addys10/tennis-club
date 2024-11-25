@@ -1,13 +1,32 @@
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+
+export class CourtAddressDto {
+  @IsString()
+  city: string;
+
+  @IsString()
+  street: string;
+
+  @IsNumber()
+  placeNumber: number;
+}
 
 export class CreateCourtDto {
   @IsString()
+  @IsNotEmpty()
   name: string;
 
-  @IsString()
-  surface: string;
+  @ValidateNested()
+  @Type(() => CourtAddressDto)
+  address: CourtAddressDto;
 
-  @IsBoolean()
-  @IsOptional()
-  isAvailable?: boolean;
+  @IsString()
+  @IsNotEmpty()
+  surface: string;
 }

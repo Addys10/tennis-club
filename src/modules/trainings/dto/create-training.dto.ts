@@ -5,13 +5,20 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Max,
+  Min,
+  ValidateIf,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { TrainingStatus } from '../../../enums/training-status.enum';
+import { TRAINING_CONSTRAINTS } from '../training.constants';
 
 export class CreateTrainingDto {
+  @Type(() => Date)
   @IsDate()
   startTime: Date;
 
+  @Type(() => Date)
   @IsDate()
   endTime: Date;
 
@@ -30,7 +37,9 @@ export class CreateTrainingDto {
   status?: TrainingStatus;
 
   @IsNumber()
-  price: number;
+  @IsOptional()
+  @ValidateIf((o) => o.price !== undefined)
+  price?: number;
 
   @IsString()
   @IsOptional()
@@ -38,5 +47,7 @@ export class CreateTrainingDto {
 
   @IsNumber()
   @IsOptional()
+  @Min(1)
+  @Max(TRAINING_CONSTRAINTS.DEFAULT_MAX_PLAYERS)
   maxPlayers?: number;
 }

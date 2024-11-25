@@ -6,7 +6,6 @@ import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { MailerModule } from './modules/mailer/mailer.module';
 import { CourtsModule } from './modules/courts/court.module';
-import { BookingsModule } from './modules/bookings/booking.module';
 import { TrainingsModule } from './modules/trainings/training.module';
 import { SeedModule } from './seeds/seed.module';
 
@@ -32,7 +31,6 @@ import { SeedModule } from './seeds/seed.module';
     UsersModule,
     AuthModule,
     CourtsModule,
-    BookingsModule,
     TrainingsModule,
     MailerModule,
     SeedModule,

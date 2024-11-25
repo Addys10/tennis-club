@@ -13,4 +13,13 @@ export class Court {
 
   @Column({ default: true })
   isAvailable: boolean;
+
+  @Column('jsonb', {
+    nullable: true, // Důležité - umožní null hodnoty pro existující záznamy
+  })
+  address: {
+    city: string;
+    street: string;
+    placeNumber: number;
+  } | null;
 }
