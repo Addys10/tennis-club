@@ -29,6 +29,11 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {role: 'admin'}
   },
+  {
+    path: 'courts',
+    loadChildren: () => import('./features/courts/courts.module').then(m => m.CourtsModule),
+    canActivate: [AuthGuard]
+  },
   // Default routa
   {
     path: '',

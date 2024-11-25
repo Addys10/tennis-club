@@ -10,6 +10,7 @@ import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {JwtInterceptor} from '@core/jwt.interceptor';
 import {UserManagementModule} from '@features/user-management/user-management.module';
+import {CourtsModule} from '@features/courts/courts.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,6 +24,7 @@ import {UserManagementModule} from '@features/user-management/user-management.mo
     CommonModule,
     RouterModule,
     UserManagementModule,
+    CourtsModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

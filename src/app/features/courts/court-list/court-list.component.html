@@ -1,0 +1,36 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Seznam kurtů</h2>
+    <button class="btn btn-primary" routerLink="new">Přidat kurt</button>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 mb-4" *ngFor="let court of courts">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ court.name }}</h5>
+          <p class="card-text">
+                <span class="badge" [ngClass]="court.isAvailable ? 'bg-success' : 'bg-danger'">
+                  {{ court.isAvailable ? 'Dostupný' : 'Nedostupný' }}
+                </span>
+          </p>
+          <p class="card-text">
+            Povrch: {{ court.surface }}<br>
+            {{ court.isIndoor ? 'Krytý kurt' : 'Venkovní kurt' }}<br>
+            Cena: {{ court.hourlyRate }} Kč/hod
+          </p>
+          <div class="d-flex justify-content-between">
+            <button class="btn btn-outline-primary" [routerLink]="[court.id]">
+              Detail
+            </button>
+            <button class="btn"
+                    [ngClass]="court.isAvailable ? 'btn-danger' : 'btn-success'"
+                    (click)="toggleAvailability(court)">
+              {{ court.isAvailable ? 'Uzavřít' : 'Otevřít' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

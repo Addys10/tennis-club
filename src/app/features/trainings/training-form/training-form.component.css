@@ -1,146 +1,114 @@
-.container {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
-
-.form-wrapper {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-}
-
-.form-title {
-  color: #2c3e50;
-  font-size: 1.8rem;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid #e9ecef;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
+/* Form styles */
+.training-form {
+  max-width: 100%;
 }
 
 .form-label {
-  display: block;
   margin-bottom: 0.5rem;
-  color: #495057;
-  font-weight: 500;
+  color: #344767;
 }
 
-.form-control,
-select {
-  width: 100%;
+.card {
+  border: 0;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  border-radius: 0.75rem;
+}
+
+.card-header {
+  border-bottom: 1px solid #f0f2f5;
+  padding: 1.5rem;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Players selection styles */
+.players-container {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #e9ecef;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  background: #ffffff;
+}
+
+.player-card {
   padding: 0.75rem;
-  border: 1px solid #ced4da;
-  border-radius: 8px;
-  transition: all 0.2s;
-  background-color: #fff;
+  border-bottom: 1px solid #f0f2f5;
+  transition: background-color 0.2s;
 }
 
-.form-control:focus,
-select:focus {
-  border-color: #28a745;
-  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
-  outline: none;
+.player-card:last-child {
+  border-bottom: none;
 }
 
-.date-time-group {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-select[multiple] {
-  min-height: 120px;
-}
-
-.price-input {
-  position: relative;
-}
-
-.price-input::after {
-  content: 'Kč';
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #6c757d;
-}
-
-.btn-group {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-  margin-top: 2rem;
-}
-
-.btn {
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 500;
-  transition: all 0.2s;
-  cursor: pointer;
-}
-
-.btn-cancel {
+.player-card:hover {
   background-color: #f8f9fa;
-  border: 1px solid #dee2e6;
-  color: #495057;
 }
 
-.btn-cancel:hover {
-  background-color: #e9ecef;
+/* Form controls */
+.form-control, .form-select {
+  border: 1px solid #e9ecef;
+  padding: 0.625rem;
+  border-radius: 0.5rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-.btn-submit {
-  background: linear-gradient(to right, #28a745, #20c997);
-  border: none;
-  color: white;
+.form-control:focus, .form-select:focus {
+  border-color: #5e72e4;
+  box-shadow: 0 0 0 0.2rem rgba(94, 114, 228, 0.25);
 }
 
-.btn-submit:hover {
-  background: linear-gradient(to right, #218838, #1e7e34);
-  transform: translateY(-1px);
+.input-group-text {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  color: #344767;
 }
 
-.btn-submit:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  transform: none;
+/* Buttons */
+.btn {
+  padding: 0.625rem 1.25rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
 }
 
-.error-message {
-  background-color: #fff5f5;
-  color: #c53030;
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  border: 1px solid #fed7d7;
+.btn-success {
+  background-color: #2dce89;
+  border-color: #2dce89;
 }
 
-.validation-error {
-  color: #c53030;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
+.btn-success:hover {
+  background-color: #26af74;
+  border-color: #26af74;
 }
 
-/* Loading spinner */
-.spinner {
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
-  margin-right: 0.5rem;
-  border: 2px solid white;
-  border-radius: 50%;
-  border-top-color: transparent;
-  animation: spin 1s linear infinite;
+/* Custom scrollbar */
+.players-container::-webkit-scrollbar {
+  width: 6px;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+.players-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.players-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.players-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 1rem;
+  }
+
+  .players-container {
+    max-height: 250px;
   }
 }

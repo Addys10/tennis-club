@@ -1,87 +1,108 @@
-<div class="container">
-  <div class="form-wrapper">
-    <h1 class="form-title">Nový trénink</h1>
-
-    <form [formGroup]="trainingForm" (ngSubmit)="onSubmit()">
-      <!-- Error message -->
-      <div *ngIf="errorMessage" class="error-message">
-        {{ errorMessage }}
-      </div>
-
-      <!-- Coach selection -->
-      <div class="form-group">
-        <label class="form-label">Trenér</label>
-        <select formControlName="coachId" class="form-control">
-          <option value="">Vyberte trenéra</option>
-          <option *ngFor="let coach of coaches" [value]="coach.id">
-            {{coach.firstName}} {{coach.lastName}}
-          </option>
-        </select>
-        <div *ngIf="submitted && trainingForm.get('coachId')?.errors" class="validation-error">
-          Vyberte trenéra
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header bg-white">
+      <h2 class="mb-0">Nový trénink</h2>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="trainingForm" (ngSubmit)="onSubmit()" class="training-form">
+        <!-- Error message -->
+        <div *ngIf="errorMessage" class="alert alert-danger">
+          {{ errorMessage }}
         </div>
-      </div>
 
-      <!-- Court selection -->
-      <div class="form-group">
-        <label class="form-label">Kurt</label>
-        <select formControlName="courtId" class="form-control">
-          <option value="">Vyberte kurt</option>
-          <option *ngFor="let court of courts" [value]="court.id">
-            {{court.name}}
-          </option>
-        </select>
-        <div *ngIf="submitted && trainingForm.get('courtId')?.errors" class="validation-error">
-          Vyberte kurt
+        <div class="row">
+          <!-- Coach selection -->
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Trenér</label>
+            <select formControlName="coachId" class="form-select">
+              <option value="">Vyberte trenéra</option>
+              <option *ngFor="let coach of coaches" [value]="coach.id">
+                {{coach.firstName}} {{coach.lastName}}
+              </option>
+            </select>
+            <div *ngIf="submitted && trainingForm.get('coachId')?.errors" class="text-danger mt-1 small">
+              Vyberte trenéra
+            </div>
+          </div>
+
+          <!-- Court selection -->
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Kurt</label>
+            <select formControlName="courtId" class="form-select">
+              <option value="">Vyberte kurt</option>
+              <option *ngFor="let court of courts" [value]="court.id">
+                {{court.name}} ({{court.surface}})
+              </option>
+            </select>
+            <div *ngIf="submitted && trainingForm.get('courtId')?.errors" class="text-danger mt-1 small">
+              Vyberte kurt
+            </div>
+          </div>
         </div>
-      </div>
 
-      <!-- Date and time -->
-      <div class="date-time-group">
-        <div class="form-group">
-          <label class="form-label">Začátek</label>
-          <input type="datetime-local" formControlName="startTime" class="form-control">
+        <!-- Date and time -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Začátek</label>
+            <input type="datetime-local" formControlName="startTime" class="form-control">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Konec</label>
+            <input type="datetime-local" formControlName="endTime" class="form-control">
+          </div>
         </div>
-        <div class="form-group">
-          <label class="form-label">Konec</label>
-          <input type="datetime-local" formControlName="endTime" class="form-control">
+
+        <!-- Players -->
+        <div class="mb-4">
+          <label class="form-label fw-bold d-flex justify-content-between">
+            <span>Hráči</span>
+            <span class="text-muted small">
+              Vybráno: {{selectedPlayersCount}} / {{trainingForm.get('maxPlayers')?.value}}
+            </span>
+          </label>
+          <div class="players-container">
+            <div *ngFor="let player of players" class="player-card">
+              <div class="form-check d-flex align-items-center">
+                <input type="checkbox"
+                       class="form-check-input me-3"
+                       [checked]="isPlayerSelected(player.id)"
+                       (change)="togglePlayerSelection(player.id)"
+                       [id]="'player-' + player.id">
+                <label [for]="'player-' + player.id" class="form-check-label w-100">
+                  <div class="fw-medium">{{player.firstName}} {{player.lastName}}</div>
+                  <div class="text-muted small">{{player.email}}</div>
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <!-- Players -->
-      <div class="form-group">
-        <label class="form-label">Hráči</label>
-        <select multiple formControlName="playerIds" class="form-control">
-          <option *ngFor="let player of players" [value]="player.id">
-            {{player.firstName}} {{player.lastName}}
-          </option>
-        </select>
-      </div>
-
-      <!-- Price -->
-      <div class="form-group">
-        <label class="form-label">Cena za osobu</label>
-        <div class="price-input">
-          <input type="number" formControlName="price" class="form-control">
+        <!-- Price -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">Cena za osobu</label>
+          <div class="input-group">
+            <input type="number" formControlName="price" class="form-control">
+            <span class="input-group-text">Kč</span>
+          </div>
         </div>
-      </div>
 
-      <!-- Notes -->
-      <div class="form-group">
-        <label class="form-label">Poznámky</label>
-        <textarea formControlName="notes" class="form-control" rows="3"></textarea>
-      </div>
+        <!-- Notes -->
+        <div class="mb-4">
+          <label class="form-label fw-bold">Poznámky</label>
+          <textarea formControlName="notes" class="form-control" rows="3"></textarea>
+        </div>
 
-      <!-- Buttons -->
-      <div class="btn-group">
-        <button type="button" class="btn btn-cancel" routerLink="/trainings">
-          Zrušit
-        </button>
-        <button type="submit" class="btn btn-submit" [disabled]="loading">
-          <span *ngIf="loading" class="spinner"></span>
-          {{ loading ? 'Ukládám...' : 'Vytvořit trénink' }}
-        </button>
-      </div>
-    </form>
+        <!-- Buttons -->
+        <div class="d-flex justify-content-end gap-2">
+          <button type="button" class="btn btn-outline-secondary" routerLink="/trainings">
+            Zrušit
+          </button>
+          <button type="submit" class="btn btn-success" [disabled]="loading">
+            <span class="spinner-border spinner-border-sm me-1" *ngIf="loading"></span>
+            {{ loading ? 'Ukládám...' : 'Vytvořit trénink' }}
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>

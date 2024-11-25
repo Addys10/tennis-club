@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Training, TrainingStatus} from '../models/training.model';
-import {environment} from '../../../environments/environment';
+import {environment} from '@env/environment';
+import {ITrainingFormData} from '@features/trainings/training-form/training.form';
 
 @Injectable({
   providedIn: 'root'
@@ -29,8 +30,35 @@ export class TrainingService {
     return this.http.get<Training[]>(`${this.apiUrl}/player/${playerId}`);
   }
 
-  create(training: Partial<Training>): Observable<Training> {
-    return this.http.post<Training>(this.apiUrl, training);
+  create(data: ITrainingFormData): Observable<any> {
+    // Formátování dat před odesláním
+    const formattedData = {
+      ...data,
+      // Opravené typování - dateString je již string
+      startTime: this.formatDateForBackend(String(data.startTime)),
+      endTime: this.formatDateForBackend(String(data.endTime)),
+      playerIds: Array.isArray(data.playerIds) ? data.playerIds : [],
+      price: Number(data.price),
+      maxPlayers: Number(data.maxPlayers),
+      status: "planned"
+    };
+
+    console.log('Formatted training data:', formattedData);
+
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post(this.apiUrl, formattedData, {headers});
+  }
+
+  private formatDateForBackend(dateString: string): string {
+    if (!dateString) return '';
+
+    try {
+      const date = new Date(dateString);
+      return date.toISOString().slice(0, 19).replace('T', ' ');
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return dateString;
+    }
   }
 
   cancel(id: number): Observable<Training> {
