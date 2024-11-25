@@ -1,44 +1,39 @@
 import {
   IsArray,
-  IsDate,
-  IsEnum,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
   Max,
   Min,
-  ValidateIf,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { TrainingStatus } from '../../../enums/training-status.enum';
-import { TRAINING_CONSTRAINTS } from '../training.constants';
 
 export class CreateTrainingDto {
-  @Type(() => Date)
-  @IsDate()
-  startTime: Date;
+  @IsString()
+  @IsNotEmpty()
+  startTime: string;
 
-  @Type(() => Date)
-  @IsDate()
-  endTime: Date;
+  @IsString()
+  @IsNotEmpty()
+  endTime: string;
 
   @IsNumber()
+  @Type(() => Number)
   coachId: number;
+
+  @IsNumber()
+  @Type(() => Number)
+  courtId: number;
 
   @IsArray()
   @IsOptional()
-  playerIds: number[];
-
-  @IsNumber()
-  courtId: number;
-
-  @IsEnum(TrainingStatus)
-  @IsOptional()
-  status?: TrainingStatus;
+  @Type(() => Number)
+  playerIds: number[] = [];
 
   @IsNumber()
   @IsOptional()
-  @ValidateIf((o) => o.price !== undefined)
+  @Type(() => Number)
   price?: number;
 
   @IsString()
@@ -47,7 +42,8 @@ export class CreateTrainingDto {
 
   @IsNumber()
   @IsOptional()
+  @Type(() => Number)
   @Min(1)
-  @Max(TRAINING_CONSTRAINTS.DEFAULT_MAX_PLAYERS)
+  @Max(6)
   maxPlayers?: number;
 }

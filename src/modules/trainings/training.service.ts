@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
-  Between,
   LessThan,
   LessThanOrEqual,
   MoreThan,
@@ -63,36 +62,6 @@ export class TrainingsService {
     });
   }
 
-  private async checkCoachAvailability(
-    coachId: number,
-    startTime: Date,
-    endTime: Date,
-  ): Promise<boolean> {
-    const conflictingTraining = await this.trainingRepository.findOne({
-      where: {
-        coach: { id: coachId },
-        startTime: Between(startTime, endTime),
-        status: TrainingStatus.CONFIRMED,
-      },
-    });
-    return !!conflictingTraining;
-  }
-
-  private async checkCourtAvailability(
-    courtId: number,
-    startTime: Date,
-    endTime: Date,
-  ): Promise<boolean> {
-    const conflictingTraining = await this.trainingRepository.findOne({
-      where: {
-        court: { id: courtId },
-        startTime: Between(startTime, endTime),
-        status: TrainingStatus.CONFIRMED,
-      },
-    });
-    return !!conflictingTraining;
-  }
-
   async cancelTraining(id: number): Promise<Training> {
     const training = await this.findOne(id);
     if (!training) {
@@ -148,6 +117,46 @@ export class TrainingsService {
     });
   }
 
+  private parseDate(dateString: string): Date {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      throw new BadRequestException('Invalid date format');
+    }
+    return date;
+  }
+
+  private async checkCoachAvailability(
+    coachId: number,
+    startTime: Date,
+    endTime: Date,
+  ): Promise<boolean> {
+    const conflictingTraining = await this.trainingRepository.findOne({
+      where: {
+        coach: { id: coachId },
+        startTime: LessThanOrEqual(endTime),
+        endTime: MoreThanOrEqual(startTime),
+        status: Not(TrainingStatus.CANCELLED),
+      },
+    });
+    return !!conflictingTraining;
+  }
+
+  private async checkCourtAvailability(
+    courtId: number,
+    startTime: Date,
+    endTime: Date,
+  ): Promise<boolean> {
+    const conflictingTraining = await this.trainingRepository.findOne({
+      where: {
+        court: { id: courtId },
+        startTime: LessThanOrEqual(endTime),
+        endTime: MoreThanOrEqual(startTime),
+        status: Not(TrainingStatus.CANCELLED),
+      },
+    });
+    return !!conflictingTraining;
+  }
+
   private validateTrainingTime(startTime: Date, endTime: Date) {
     const now = new Date();
     const durationMinutes =
@@ -158,6 +167,10 @@ export class TrainingsService {
     maxAdvanceDate.setDate(
       maxAdvanceDate.getDate() + TRAINING_CONSTRAINTS.MAX_ADVANCE_BOOKING_DAYS,
     );
+
+    if (startTime >= endTime) {
+      throw new BadRequestException('Start time must be before end time');
+    }
 
     if (durationMinutes < TRAINING_CONSTRAINTS.MIN_DURATION_MINUTES) {
       throw new BadRequestException(
@@ -213,53 +226,61 @@ export class TrainingsService {
   }
 
   async create(createTrainingDto: CreateTrainingDto): Promise<Training> {
-    // Validace času
-    this.validateTrainingTime(
-      createTrainingDto.startTime,
-      createTrainingDto.endTime,
-    );
+    try {
+      // Převod string datumů na Date objekty
+      const startTime = this.parseDate(createTrainingDto.startTime);
+      const endTime = this.parseDate(createTrainingDto.endTime);
 
-    const coach = await this.usersService.findOne(createTrainingDto.coachId);
-    if (!coach || coach.role !== UserRole.COACH) {
-      throw new BadRequestException('Invalid coach ID or user is not a coach');
-    }
+      // Validace času
+      this.validateTrainingTime(startTime, endTime);
 
-    if (!coach.isActive) {
-      throw new BadRequestException('Coach is not active');
-    }
+      // Validace trenéra
+      const coach = await this.usersService.findOne(createTrainingDto.coachId);
+      if (!coach || coach.role !== UserRole.COACH) {
+        throw new BadRequestException(
+          'Invalid coach ID or user is not a coach',
+        );
+      }
 
-    const court = await this.courtsService.findOne(createTrainingDto.courtId);
-    if (!court || !court.isAvailable) {
-      throw new BadRequestException('Court is not available');
-    }
+      if (!coach.isActive) {
+        throw new BadRequestException('Coach is not active');
+      }
 
-    // Kontrola dostupnosti
-    const [coachConflict, courtConflict] = await Promise.all([
-      this.checkCoachAvailability(
-        createTrainingDto.coachId,
-        createTrainingDto.startTime,
-        createTrainingDto.endTime,
-      ),
-      this.checkCourtAvailability(
-        createTrainingDto.courtId,
-        createTrainingDto.startTime,
-        createTrainingDto.endTime,
-      ),
-    ]);
+      // Validace kurtu
+      const court = await this.courtsService.findOne(createTrainingDto.courtId);
+      if (!court || !court.isAvailable) {
+        throw new BadRequestException('Court is not available');
+      }
 
-    if (coachConflict) {
-      throw new BadRequestException('Coach is not available at this time');
-    }
+      // Kontrola dostupnosti
+      const [coachConflict, courtConflict] = await Promise.all([
+        this.checkCoachAvailability(
+          createTrainingDto.coachId,
+          startTime,
+          endTime,
+        ),
+        this.checkCourtAvailability(
+          createTrainingDto.courtId,
+          startTime,
+          endTime,
+        ),
+      ]);
 
-    if (courtConflict) {
-      throw new BadRequestException('Court is not available at this time');
-    }
+      if (coachConflict) {
+        throw new BadRequestException('Coach is not available at this time');
+      }
 
-    // Zpracování hráčů
-    let players: User[] = [];
-    if (createTrainingDto.playerIds?.length) {
-      players = await Promise.all(
-        createTrainingDto.playerIds.map((id) => this.usersService.findOne(id)),
+      if (courtConflict) {
+        throw new BadRequestException('Court is not available at this time');
+      }
+
+      // Zpracování hráčů
+      const playerIds = Array.isArray(createTrainingDto.playerIds)
+        ? createTrainingDto.playerIds
+        : [];
+
+      const players = await Promise.all(
+        playerIds.map((id) => this.usersService.findOne(id)),
       );
 
       const invalidPlayers = players.filter(
@@ -273,35 +294,44 @@ export class TrainingsService {
         );
       }
 
-      if (
-        players.length >
-        (createTrainingDto.maxPlayers ||
-          TRAINING_CONSTRAINTS.DEFAULT_MAX_PLAYERS)
-      ) {
+      // Kontrola maximálního počtu hráčů
+      const maxPlayers =
+        createTrainingDto.maxPlayers ||
+        TRAINING_CONSTRAINTS.DEFAULT_MAX_PLAYERS;
+      if (players.length > maxPlayers) {
         throw new BadRequestException('Too many players for this training');
       }
-    }
 
-    // Výpočet ceny
-    const price =
-      createTrainingDto.price ||
-      this.calculateTrainingPrice(
+      // Výpočet ceny
+      const price =
+        createTrainingDto.price ||
+        this.calculateTrainingPrice(
+          coach,
+          court,
+          startTime,
+          endTime,
+          players.length,
+        );
+
+      // Vytvoření tréninku
+      const training = this.trainingRepository.create({
+        startTime,
+        endTime,
         coach,
         court,
-        createTrainingDto.startTime,
-        createTrainingDto.endTime,
-        players.length,
-      );
+        players,
+        price,
+        notes: createTrainingDto.notes,
+        maxPlayers,
+        status: TrainingStatus.PLANNED,
+      });
 
-    const training = this.trainingRepository.create({
-      ...createTrainingDto,
-      price,
-      coach,
-      court,
-      players,
-      status: TrainingStatus.PLANNED,
-    });
-
-    return this.trainingRepository.save(training);
+      return await this.trainingRepository.save(training);
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+      throw new BadRequestException(error.message || 'Error creating training');
+    }
   }
 }
