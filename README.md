@@ -1,6 +1,6 @@
 # 🎾 Tenisový klub 
 
-Moderní webová aplikace pro správu tenisových kurtů a rezervací. Systém umožňuje uživatelům snadno rezervovat tenisové kurty, spravovat své rezervace a sledovat dostupnost kurtů v reálném čase.
+Moderní webová aplikace pro správu tenisového klubu. Systém umožňuje uživatelům snadno vytvářet tréninkové jednotky, spravovat uživatele a sledovat aktuální fakturaci.
 
 ## 🚀 Technologie
 
@@ -16,7 +16,6 @@ Moderní webová aplikace pro správu tenisových kurtů a rezervací. Systém u
 - **Database:** PostgreSQL
 - **ORM:** TypeORM
 - **Authentication:** JWT
-- **API Documentation:** Swagger
 
 ## ✨ Funkce
 
@@ -30,11 +29,11 @@ Moderní webová aplikace pro správu tenisových kurtů a rezervací. Systém u
     - Detaily a stav jednotlivých kurtů
     - Správa údržby (pro adminy)
 
-- 📅 **Rezervační systém**
-    - Vytváření rezervací v reálném čase
-    - Přehled vlastních rezervací
-    - Historie rezervací
-    - Automatické notifikace
+- 📅 **Tréninkový systém**
+    - Vytváření tréninků v reálném čase
+    - Přehled vlastních tréninků
+    - Historie tréninků
+    - Kontrola dostupnosti tréninku
 
 ## 🛠️ Instalace
 
@@ -73,18 +72,10 @@ export const environment = {
 };
 ```
 
-## 🌐 API Dokumentace
-
-API dokumentace je dostupná po spuštění serveru na:
-```
-http://localhost:3000/api/docs
-```
 
 ## 👥 Autor
 
-- Adam Osek
+- Adam Hanus
 - GitHub: [@Addys10](https://github.com/Addys10)
 
 ---
-
-🌟 Pokud se vám projekt líbí, dejte mu hvězdičku na GitHubu!
