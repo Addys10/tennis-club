@@ -9,7 +9,7 @@
 
 /* Navbar Styles */
 .navbar-glass {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding: 1rem 0;
@@ -80,7 +80,7 @@
 
 /* User Menu */
 .user-menu {
-  color: white;
+  color: black;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 50px;
@@ -93,7 +93,7 @@
 }
 
 .dropdown-menu {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.93);
   backdrop-filter: blur(10px);
   border: none;
   border-radius: 15px;
@@ -108,7 +108,7 @@
 
 .dropdown-item:hover {
   background: rgba(40, 167, 69, 0.1);
-  color: #28a745;
+  color: black;
 }
 
 /* Main Content */
@@ -131,7 +131,7 @@
 }
 
 .btn-success:hover {
-  background: linear-gradient(to right, #218838, #1e7e34);
+  background: linear-gradient(to right, black, grey);
   transform: translateY(-1px);
 }
 
