@@ -23,16 +23,15 @@ export class TrainingListComponent implements OnInit {
     );
   }
 
+
   getStatusClass(status: string): string {
-    switch (status) {
-      case 'confirmed':
-        return 'bg-green-100 text-green-800';
-      case 'cancelled':
-        return 'bg-red-100 text-red-800';
-      case 'completed':
-        return 'bg-gray-100 text-gray-800';
-      default:
-        return 'bg-yellow-100 text-yellow-800';
-    }
+    const statusMap: { [key: string]: string } = {
+      'PLANNED': 'status-planned',
+      'CONFIRMED': 'status-confirmed',
+      'CANCELLED': 'status-cancelled',
+      'COMPLETED': 'status-completed'
+    };
+
+    return `badge ${statusMap[status] || 'status-planned'}`;
   }
 }

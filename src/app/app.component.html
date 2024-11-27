@@ -1,94 +1,102 @@
-<div class="app-container min-vh-100 d-flex flex-column">
-  <!-- Navigace s průhledností -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark-transparent">
+<!-- app.component.html -->
+<div class="app-container">
+  <nav class="navbar navbar-expand-lg navbar-glass fixed-top">
     <div class="container">
-      <a class="navbar-brand" routerLink="/">SK JC SPORT Opava</a>
+      <!-- Logo -->
+      <a class="navbar-brand" routerLink="/">
+        <img src="./assets/JCS_OPAVA_Logo_RGB.png" alt="SK JC SPORT Opava">
+        SK JC SPORT Opava
+      </a>
 
-      <button class="navbar-toggler" type="button"
+      <!-- Mobile Toggle -->
+      <button class="navbar-toggler"
+              type="button"
               (click)="toggleNavbar()"
               [attr.aria-expanded]="!isNavbarCollapsed">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" [class.show]="!isNavbarCollapsed">
-        <!-- Levá část menu - pouze pro přihlášené -->
-        <ul class="navbar-nav me-auto">
-          <ng-container *ngIf="isAuthenticated">
-            <li class="nav-item">
-              <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">
-                Dashboard
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" routerLink="/courts" routerLinkActive="active">
-                Kurty
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" routerLink="/trainings" routerLinkActive="active">
-                Tréninky
-              </a>
-            </li>
-            <li class="nav-item" *ngIf="currentUser?.role === 'admin'">
-              <a class="nav-link" routerLink="/users" routerLinkActive="active">
-                <i class="bi bi-people"></i>
-                Správa uživatelů
-              </a>
-            </li>
-          </ng-container>
+      <!-- Navigation Items -->
+      <div class="navbar-collapse" [class.show]="!isNavbarCollapsed">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">
+              <i class="bi bi-speedometer2 me-1"></i>
+              Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/courts" routerLinkActive="active">
+              <i class="bi bi-geo-alt me-1"></i>
+              Kurty
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/trainings" routerLinkActive="active">
+              <i class="bi bi-calendar-check me-1"></i>
+              Tréninky
+            </a>
+          </li>
+          <li class="nav-item" *ngIf="isAdmin">
+            <a class="nav-link" routerLink="/users" routerLinkActive="active">
+              <i class="bi bi-people me-1"></i>
+              Správa uživatelů
+            </a>
+          </li>
         </ul>
 
-        <!-- Pravá část menu -->
-        <ul class="navbar-nav ms-auto">
-          <ng-container *ngIf="!isAuthenticated">
-            <li class="nav-item">
-              <a class="nav-link" routerLink="/auth/login" routerLinkActive="active">
-                Přihlášení
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" routerLink="/auth/register" routerLinkActive="active">
-                Registrace
-              </a>
-            </li>
-          </ng-container>
+        <!-- Auth Section -->
+        <div class="nav-auth" *ngIf="!currentUser">
+          <a class="btn btn-outline-light me-2" routerLink="/auth/login">
+            <i class="bi bi-box-arrow-in-right me-1"></i>
+            Přihlášení
+          </a>
+          <a class="btn btn-success" routerLink="/auth/register">
+            <i class="bi bi-person-plus me-1"></i>
+            Registrace
+          </a>
+        </div>
 
-          <li class="nav-item dropdown" *ngIf="isAuthenticated && currentUser">
-            <a class="nav-link dropdown-toggle" href="#" role="button"
-               data-bs-toggle="dropdown" aria-expanded="false">
-              {{ currentUser.email   }}
-            </a>
+        <!-- User Menu -->
+        <div class="nav-user" *ngIf="currentUser">
+          <div class="dropdown">
+            <button class="btn dropdown-toggle user-menu"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+              <i class="bi bi-person-circle me-2"></i>
+              {{ currentUser.email }}
+            </button>
             <ul class="dropdown-menu dropdown-menu-end">
               <li>
                 <a class="dropdown-item" routerLink="/profile">
+                  <i class="bi bi-person me-2"></i>
                   Můj profil
                 </a>
               </li>
+              <li><hr class="dropdown-divider"></li>
               <li>
-                <hr class="dropdown-divider">
-              </li>
-              <li>
-                <a class="dropdown-item" (click)="logout()">
+                <a class="dropdown-item" (click)="logout()" style="cursor: pointer">
+                  <i class="bi bi-box-arrow-right me-2"></i>
                   Odhlásit se
                 </a>
               </li>
             </ul>
-          </li>
-        </ul>
+          </div>
+        </div>
       </div>
     </div>
   </nav>
 
-  <!-- Zbytek kódu zůstává stejný -->
-  <main class="flex-grow-1 content-wrapper">
-    <div class="container mt-4">
-      <router-outlet></router-outlet>
-    </div>
+  <!-- Main Content -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
   </main>
 
-  <footer class="bg-dark text-light py-3 mt-auto">
-    <div class="container text-center">
-      <p class="mb-0">&copy; 2024 Tenisový klub. Všechna práva vyhrazena.</p>
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container text-center py-3">
+      © 2024 Tenisový klub. Všechna práva vyhrazena.
     </div>
   </footer>
 </div>

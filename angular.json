@@ -35,7 +35,7 @@
                 "glob": "**/*",
                 "input": "public"
               },
-              "src/favicon.ico",
+              "src/favicon2.ico",
               "src/assets"
             ],
             "styles": [
@@ -111,7 +111,7 @@
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
-              "src/favicon.ico",
+              "src/favicon2.ico",
               "src/assets"
             ],
             "styles": [

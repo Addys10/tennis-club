@@ -1,26 +1,13 @@
-<div class="container-fluid py-4">
-  <!-- Hlavička s tlačítkem pro vytvoření -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Správa uživatelů</h2>
-    <button class="btn btn-success" (click)="openCreateUserModal()">
-      <i class="bi bi-plus-circle me-2"></i>
+<div class="user-management-container">
+  <div class="header-section">
+    <h1>Správa uživatelů</h1>
+    <button class="btn btn-success" (click)="showCreateModal = true">
+      <i class="bi bi-plus-lg"></i>
       Vytvořit uživatele
     </button>
   </div>
 
-  <!-- Loading a Error stavy -->
-  <div class="text-center py-5" *ngIf="loading">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Načítání...</span>
-    </div>
-  </div>
-
-  <div class="alert alert-danger" *ngIf="error" role="alert">
-    {{ error }}
-  </div>
-
-  <!-- Tabulka uživatelů -->
-  <div class="card" *ngIf="!loading && !error">
+  <div class="content-card">
     <div class="card-body">
       <div class="table-responsive">
         <table class="table table-hover">
@@ -30,26 +17,27 @@
             <th>Email</th>
             <th>Role</th>
             <th>Telefon</th>
-            <th>Akce</th>
+            <th class="text-end">Akce</th>
           </tr>
           </thead>
           <tbody>
           <tr *ngFor="let user of users">
-            <td>{{ user.firstName }} {{ user.lastName }}</td>
+            <td>
+              <div class="user-name">
+                <i class="bi bi-person-circle"></i>
+                {{ user.firstName }} {{ user.lastName }}
+              </div>
+            </td>
             <td>{{ user.email }}</td>
             <td>
-              <select class="form-select form-select-sm"
-                      [(ngModel)]="user.role"
-                      (change)="updateRole(user.id, user.role)">
-                <option [value]="UserRole.ADMIN">Admin</option>
-                <option [value]="UserRole.COACH">Trenér</option>
-                <option [value]="UserRole.PLAYER">Hráč</option>
-                <option [value]="UserRole.MEMBER">Člen</option>
-              </select>
+                <span class="role-badge" [ngClass]="'role-' + user.role.toLowerCase()">
+                  {{ getRoleLabel(user.role) }}
+                </span>
             </td>
             <td>{{ user.phone || '-' }}</td>
-            <td>
-              <button class="btn btn-sm btn-primary me-2" (click)="editUser(user)">
+            <td class="text-end">
+              <button class="btn btn-outline-primary btn-sm" (click)="editUser(user)">
+                <i class="bi bi-pencil"></i>
                 Upravit
               </button>
             </td>
@@ -60,125 +48,107 @@
     </div>
   </div>
 
-  <!-- Modal pro editaci uživatele -->
-  <div class="modal" [class.show]="selectedUser" [style.display]="selectedUser ? 'block' : 'none'">
-    <div class="modal-dialog">
-      <div class="modal-content" *ngIf="selectedUser">
-        <div class="modal-header">
-          <h5 class="modal-title">Upravit uživatele</h5>
-          <button type="button" class="btn-close" (click)="closeModal()"></button>
-        </div>
-        <div class="modal-body">
-          <form [formGroup]="editForm" (ngSubmit)="saveUser()">
-            <div class="mb-3">
-              <label class="form-label">Jméno</label>
-              <input type="text" class="form-control" formControlName="firstName">
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Příjmení</label>
-              <input type="text" class="form-control" formControlName="lastName">
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Telefon</label>
-              <input type="tel" class="form-control" formControlName="phone">
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" (click)="closeModal()">Zrušit</button>
-              <button type="submit" class="btn btn-primary" [disabled]="!editForm.valid">Uložit</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal pro vytvoření uživatele -->
-  <div class="modal" [class.show]="showCreateModal" [style.display]="showCreateModal ? 'block' : 'none'">
+  <!-- Edit Modal -->
+  <div class="modal" [class.show]="selectedUser" [class.d-block]="selectedUser">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Vytvořit nového uživatele</h5>
-          <button type="button" class="btn-close" (click)="closeCreateModal()"></button>
+          <h5 class="modal-title">Upravit uživatele</h5>
+          <button type="button" class="btn-close" (click)="closeEditModal()"></button>
         </div>
-        <div class="modal-body">
-          <form [formGroup]="createUserForm">
-            <div class="mb-3">
-              <label class="form-label">Jméno</label>
+        <form [formGroup]="editForm" (ngSubmit)="onSubmitEdit()">
+          <div class="modal-body">
+            <div class="form-group mb-3">
+              <label>Jméno</label>
               <input type="text" class="form-control" formControlName="firstName">
-              <div class="text-danger" *ngIf="createUserForm.get('firstName')?.errors?.['required'] && createUserForm.get('firstName')?.touched">
-                Jméno je povinné
-              </div>
             </div>
-
-            <div class="mb-3">
-              <label class="form-label">Příjmení</label>
+            <div class="form-group mb-3">
+              <label>Příjmení</label>
               <input type="text" class="form-control" formControlName="lastName">
-              <div class="text-danger" *ngIf="createUserForm.get('lastName')?.errors?.['required'] && createUserForm.get('lastName')?.touched">
-                Příjmení je povinné
-              </div>
             </div>
-
-            <div class="mb-3">
-              <label class="form-label">Email</label>
-              <input type="email" class="form-control" formControlName="email">
-              <div class="text-danger" *ngIf="createUserForm.get('email')?.errors?.['required'] && createUserForm.get('email')?.touched">
-                Email je povinný
-              </div>
-              <div class="text-danger" *ngIf="createUserForm.get('email')?.errors?.['email'] && createUserForm.get('email')?.touched">
-                Neplatný formát emailu
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">Heslo</label>
-              <input type="password" class="form-control" formControlName="password">
-              <div class="text-danger" *ngIf="createUserForm.get('password')?.errors?.['required'] && createUserForm.get('password')?.touched">
-                Heslo je povinné
-              </div>
-              <div class="text-danger" *ngIf="createUserForm.get('password')?.errors?.['minlength'] && createUserForm.get('password')?.touched">
-                Heslo musí mít alespoň 6 znaků
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">Role</label>
+            <div class="form-group mb-3">
+              <label>Role</label>
               <select class="form-select" formControlName="role">
-                <option [value]="role" *ngFor="let role of roles">{{role}}</option>
+                <option *ngFor="let role of roles" [value]="role">
+                  {{ getRoleLabel(role) }}
+                </option>
               </select>
             </div>
-
-            <div class="mb-3">
-              <label class="form-label">Telefon</label>
-              <input type="tel" class="form-control" formControlName="phone">
+            <div class="form-group mb-3">
+              <label>Telefon</label>
+              <input type="text" class="form-control" formControlName="phone">
             </div>
-
-            <!-- Dodatečná pole pro trenéry -->
-            <ng-container *ngIf="createUserForm.get('role')?.value === UserRole.COACH">
-              <div class="mb-3">
-                <label class="form-label">Specializace (oddělené čárkou)</label>
-                <input type="text" class="form-control" formControlName="specialization">
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label">Hodinová sazba (Kč)</label>
-                <input type="number" class="form-control" formControlName="hourlyRate">
-              </div>
-            </ng-container>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeCreateModal()">Zrušit</button>
-          <button type="button" class="btn btn-primary"
-                  (click)="onSubmitCreate()"
-                  [disabled]="!createUserForm.valid || loading">
-            <span class="spinner-border spinner-border-sm me-2" *ngIf="loading"></span>
-            Vytvořit
-          </button>
-        </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" (click)="closeEditModal()">
+              Zrušit
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="editForm.invalid || loading">
+              <i class="bi bi-check2" *ngIf="!loading"></i>
+              <span class="spinner-border spinner-border-sm" *ngIf="loading"></span>
+              Uložit změny
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
 
-  <!-- Modal backdrop -->
+  <!-- Create Modal -->
+  <div class="modal" [class.show]="showCreateModal" [class.d-block]="showCreateModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Nový uživatel</h5>
+          <button type="button" class="btn-close" (click)="closeCreateModal()"></button>
+        </div>
+        <form [formGroup]="createForm" (ngSubmit)="onSubmitCreate()">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label>Jméno</label>
+                <input type="text" class="form-control" formControlName="firstName">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label>Příjmení</label>
+                <input type="text" class="form-control" formControlName="lastName">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label>Email</label>
+              <input type="email" class="form-control" formControlName="email">
+            </div>
+            <div class="mb-3">
+              <label>Heslo</label>
+              <input type="password" class="form-control" formControlName="password">
+            </div>
+            <div class="mb-3">
+              <label>Role</label>
+              <select class="form-select" formControlName="role">
+                <option *ngFor="let role of roles" [value]="role">
+                  {{ getRoleLabel(role) }}
+                </option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label>Telefon</label>
+              <input type="text" class="form-control" formControlName="phone">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" (click)="closeCreateModal()">
+              Zrušit
+            </button>
+            <button type="submit" class="btn btn-success" [disabled]="createForm.invalid || loading">
+              <i class="bi bi-plus-lg" *ngIf="!loading"></i>
+              <span class="spinner-border spinner-border-sm" *ngIf="loading"></span>
+              Vytvořit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-backdrop fade show" *ngIf="selectedUser || showCreateModal"></div>
 </div>

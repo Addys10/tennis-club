@@ -11,6 +11,7 @@ import {RouterModule} from '@angular/router';
 import {JwtInterceptor} from '@core/jwt.interceptor';
 import {UserManagementModule} from '@features/user-management/user-management.module';
 import {CourtsModule} from '@features/courts/courts.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,6 +26,7 @@ import {CourtsModule} from '@features/courts/courts.module';
     RouterModule,
     UserManagementModule,
     CourtsModule,
+    NgbModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

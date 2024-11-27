@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {AuthService} from '@core/services/auth.service';
-import {User} from '@core/models/auth.model';
-import {UserRole} from '@core/models/user.model';
+// app.component.ts
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '@core/services/auth.service';
+import { User } from '@core/models/auth.model';
+import { UserRole } from '@core/models/user.model';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,7 @@ export class AppComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.authService.currentUser$.subscribe(
       user => this.currentUser = user
     );
@@ -28,16 +29,16 @@ export class AppComponent implements OnInit {
     return this.authService.isAuthenticated();
   }
 
-  toggleNavbar() {
+  get isAdmin(): boolean {
+    return this.currentUser?.role === UserRole.ADMIN;
+  }
+
+  toggleNavbar(): void {
     this.isNavbarCollapsed = !this.isNavbarCollapsed;
   }
 
-  logout() {
+  logout(): void {
     this.authService.logout();
     this.router.navigate(['/auth/login']);
-  }
-
-  get isAdmin(): boolean {
-    return this.currentUser?.role === UserRole.ADMIN;
   }
 }

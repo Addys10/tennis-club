@@ -9,23 +9,52 @@ import {CourtsService} from '@core/services/court.service';
 })
 export class CourtsListComponent implements OnInit {
   courts: Court[] = [];
+  loading = false;
+  error?: string;
 
-  constructor(private courtsService: CourtsService) {}
+  constructor(private courtsService: CourtsService) {
+  }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadCourts();
   }
 
-  loadCourts() {
-    this.courtsService.getAll().subscribe(
-      courts => this.courts = courts
-    );
+  loadCourts(): void {
+    this.loading = true;
+    this.error = undefined;
+
+    this.courtsService.getAll().subscribe({
+      next: (courts) => {
+        this.courts = courts;
+        this.loading = false;
+      },
+      error: () => {
+        this.error = 'Chyba při načítání kurtů';
+        this.loading = false;
+      }
+    });
   }
 
-  toggleAvailability(court: Court) {
+  toggleAvailability(court: Court, event: Event): void {
+    event.stopPropagation();
+
     this.courtsService.updateCourtAvailability(court.id, !court.isAvailable)
-      .subscribe(() => {
-        court.isAvailable = !court.isAvailable;
+      .subscribe({
+        next: () => {
+          court.isAvailable = !court.isAvailable;
+        },
+        error: () => {
+          this.error = 'Chyba při změně dostupnosti kurtu';
+        }
       });
+  }
+
+  getSurfaceLabel(surface: string): string {
+    const surfaces = {
+      clay: 'Antuka',
+      hard: 'Tvrdý',
+      grass: 'Tráva'
+    };
+    return surfaces[surface as keyof typeof surfaces] || surface;
   }
 }

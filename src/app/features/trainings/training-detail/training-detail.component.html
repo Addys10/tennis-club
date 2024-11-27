@@ -1,73 +1,75 @@
-<div class="container mx-auto p-4" *ngIf="training">
-  <div class="max-w-3xl mx-auto bg-white shadow rounded-lg">
-    <!-- Hlavička -->
-    <div class="p-6 border-b">
-      <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold">Detail tréninku</h1>
-        <span [class]="getStatusClass(training.status)"
-              class="px-3 py-1 rounded-full text-sm">
-              {{ training.status }}
-            </span>
+<div class="detail-container" *ngIf="training">
+  <div class="content-card">
+    <!-- Header -->
+    <div class="header-section">
+      <div class="title-wrapper">
+        <h1>Detail tréninku</h1>
+        <span class="status-badge" [ngClass]="getStatusClass(training.status)">
+          {{ training.status }}
+        </span>
       </div>
     </div>
 
-    <!-- Základní informace -->
-    <div class="p-6 border-b">
-      <div class="grid grid-cols-2 gap-6">
-        <div>
-          <h3 class="font-medium text-gray-500">Čas</h3>
-          <p class="mt-1">
-            {{ training.startTime | date:'dd.MM.yyyy HH:mm' }} -
-            {{ training.endTime | date:'HH:mm' }}
-          </p>
-        </div>
-        <div>
-          <h3 class="font-medium text-gray-500">Kurt</h3>
-          <p class="mt-1">{{ training.court.name }}</p>
+    <!-- Main Info -->
+    <div class="info-grid">
+      <div class="info-block">
+        <h2>Čas</h2>
+        <div class="info-content">
+          <i class="bi bi-clock"></i>
+          {{ training.startTime | date:'dd.MM.yyyy HH:mm' }} -
+          {{ training.endTime | date:'HH:mm' }}
         </div>
       </div>
-    </div>
 
-    <!-- Trenér -->
-    <div class="p-6 border-b">
-      <h3 class="font-medium text-gray-500">Trenér</h3>
-      <div class="mt-2 flex items-center">
-        <div>
-          <p class="font-medium">
-            {{ training.coach.firstName }} {{ training.coach.lastName }}
-          </p>
-          <p class="text-sm text-gray-500">{{ training.coach.email }}</p>
+      <div class="info-block">
+        <h2>Kurt</h2>
+        <div class="info-content">
+          <i class="bi bi-geo-alt"></i>
+          {{ training.court.name }}
         </div>
       </div>
     </div>
 
-    <!-- Hráči -->
-    <div class="p-6 border-b">
-      <h3 class="font-medium text-gray-500 mb-2">Hráči</h3>
-      <div class="space-y-2">
-        <div *ngFor="let player of training.players"
-             class="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
+    <!-- Coach Section -->
+    <div class="section">
+      <h2>Trenér</h2>
+      <div class="coach-card">
+        <div class="user-info">
+          <i class="bi bi-person-circle"></i>
           <div>
-            <p class="font-medium">
-              {{ player.firstName }} {{ player.lastName }}
-            </p>
-            <p class="text-sm text-gray-500">{{ player.email }}</p>
+            <div class="name">{{ training.coach.firstName }} {{ training.coach.lastName }}</div>
+            <div class="email">{{ training.coach.email }}</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Další informace -->
-    <div class="p-6">
-      <div class="grid grid-cols-2 gap-6">
-        <div>
-          <h3 class="font-medium text-gray-500">Cena</h3>
-          <p class="mt-1">{{ training.price }} Kč</p>
+    <!-- Players Section -->
+    <div class="section">
+      <h2>Hráči</h2>
+      <div class="players-grid">
+        <div class="player-card" *ngFor="let player of training.players">
+          <div class="user-info">
+            <i class="bi bi-person"></i>
+            <div>
+              <div class="name">{{ player.firstName }} {{ player.lastName }}</div>
+              <div class="email">{{ player.email }}</div>
+            </div>
+          </div>
         </div>
-        <div>
-          <h3 class="font-medium text-gray-500">Poznámky</h3>
-          <p class="mt-1">{{ training.notes || 'Žádné poznámky' }}</p>
-        </div>
+      </div>
+    </div>
+
+    <!-- Footer Info -->
+    <div class="footer-section">
+      <div class="info-block">
+        <h2>Cena</h2>
+        <div class="price">{{ training.price }} Kč</div>
+      </div>
+
+      <div class="info-block">
+        <h2>Poznámky</h2>
+        <div class="notes">{{ training.notes || 'Žádné poznámky' }}</div>
       </div>
     </div>
   </div>

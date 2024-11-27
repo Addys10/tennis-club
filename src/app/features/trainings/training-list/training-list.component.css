@@ -1,25 +1,33 @@
-/* styles.css nebo component styles */
-.form-control:focus,
-.form-select:focus {
-  border-color: #198754;
-  box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+.hover-shadow {
+  transition: all 0.3s ease;
 }
 
-.input-group-text {
-  background-color: #f8f9fa;
-  border-color: #ced4da;
+.hover-shadow:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
 }
 
-.shadow-sm {
-  box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+.badge {
+  padding: 0.5em 1em;
 }
 
-.btn-success {
-  background-color: #198754;
-  border-color: #198754;
+/* Status badges */
+.badge.status-planned {
+  background-color: #17a2b8;
+  color: white;
 }
 
-.btn-success:hover {
-  background-color: #157347;
-  border-color: #146c43;
+.badge.status-confirmed {
+  background-color: #28a745;
+  color: white;
+}
+
+.badge.status-cancelled {
+  background-color: #dc3545;
+  color: white;
+}
+
+.badge.status-completed {
+  background-color: #6c757d;
+  color: white;
 }

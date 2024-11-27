@@ -1,35 +1,69 @@
-<div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Seznam kurtů</h2>
-    <button class="btn btn-primary" routerLink="new">Přidat kurt</button>
+<div class="court-list-container">
+  <div class="header-section">
+    <h1>Seznam kurtů</h1>
+    <button
+      class="btn btn-primary"
+      routerLink="/courts/new"
+    >
+      <i class="bi bi-plus-lg"></i>
+      Přidat kurt
+    </button>
   </div>
 
-  <div class="row">
-    <div class="col-md-4 mb-4" *ngFor="let court of courts">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">{{ court.name }}</h5>
-          <p class="card-text">
-                <span class="badge" [ngClass]="court.isAvailable ? 'bg-success' : 'bg-danger'">
-                  {{ court.isAvailable ? 'Dostupný' : 'Nedostupný' }}
-                </span>
-          </p>
-          <p class="card-text">
-            Povrch: {{ court.surface }}<br>
-            {{ court.isIndoor ? 'Krytý kurt' : 'Venkovní kurt' }}<br>
-            Cena: {{ court.hourlyRate }} Kč/hod
-          </p>
-          <div class="d-flex justify-content-between">
-            <button class="btn btn-outline-primary" [routerLink]="[court.id]">
-              Detail
-            </button>
-            <button class="btn"
-                    [ngClass]="court.isAvailable ? 'btn-danger' : 'btn-success'"
-                    (click)="toggleAvailability(court)">
-              {{ court.isAvailable ? 'Uzavřít' : 'Otevřít' }}
-            </button>
-          </div>
+  <div class="alert alert-danger" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div class="loading-spinner" *ngIf="loading">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Načítání...</span>
+    </div>
+  </div>
+
+  <div class="courts-grid" *ngIf="!loading">
+    <div class="court-card" *ngFor="let court of courts">
+      <div class="card-header">
+        <h2>{{ court.name }}</h2>
+        <span class="status-badge" [class.available]="court.isAvailable">
+          {{ court.isAvailable ? 'Dostupný' : 'Nedostupný' }}
+        </span>
+      </div>
+
+      <div class="card-content">
+        <div class="info-row">
+          <i class="bi bi-layers"></i>
+          <span>Povrch: {{ getSurfaceLabel(court.surface) }}</span>
         </div>
+
+        <div class="info-row">
+          <i class="bi bi-house"></i>
+          <span>{{ court.isIndoor ? 'Krytý kurt' : 'Venkovní kurt' }}</span>
+        </div>
+
+        <div class="info-row">
+          <i class="bi bi-currency-dollar"></i>
+          <span>Cena: {{ court.hourlyRate }} Kč/hod</span>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button
+          class="btn btn-outline-primary"
+          [routerLink]="['/courts', court.id]"
+        >
+          <i class="bi bi-info-circle"></i>
+          Detail
+        </button>
+
+        <button
+          class="btn"
+          [class.btn-danger]="court.isAvailable"
+          [class.btn-success]="!court.isAvailable"
+          (click)="toggleAvailability(court, $event)"
+        >
+          <i class="bi" [class.bi-lock]="court.isAvailable" [class.bi-unlock]="!court.isAvailable"></i>
+          {{ court.isAvailable ? 'Uzavřít' : 'Otevřít' }}
+        </button>
       </div>
     </div>
   </div>

@@ -1,38 +1,73 @@
-<div class="container-fluid py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3">Tréninky</h1>
-    <button routerLink="create"
-            class="btn btn-success">
-      <i class="bi bi-plus-circle me-2"></i>
-      Nový trénink
-    </button>
-  </div>
-</div>
-  <!-- zbytek seznamu -->
+<div class="container-fluid bg-light min-vh-100 py-4">
+  <!-- Header Section -->
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="h3 text-dark">Tréninky</h1>
+      <button routerLink="create" class="btn btn-success d-flex align-items-center gap-2">
+        <i class="bi bi-plus-circle"></i>
+        Nový trénink
+      </button>
+    </div>
 
-<div class="grid gap-4">
-  <div *ngFor="let training of trainings"
-       class="border rounded p-4 hover:shadow-lg transition">
-    <div class="flex justify-between items-center">
-      <div>
-        <p class="font-bold">
-          {{ training.startTime | date:'dd.MM.yyyy HH:mm' }} -
-          {{ training.endTime | date:'HH:mm' }}
-        </p>
-        <p>Trenér: {{ training.coach.firstName }} {{ training.coach.lastName }}</p>
-        <p>Kurt: {{ training.court.name }}</p>
-      </div>
-      <div class="space-x-2">
+    <!-- Trainings List -->
+    <div class="row">
+      <div class="col-md-6 col-lg-4 mb-4" *ngFor="let training of trainings">
+        <div class="card h-100 shadow-sm hover-shadow">
+          <div class="card-body">
+            <!-- Date and Time -->
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <div>
+                <h5 class="card-title mb-1">
+                  {{ training.startTime | date:'dd.MM.yyyy HH:mm' }} - {{ training.endTime | date:'HH:mm' }}
+                </h5>
+              </div>
               <span [class]="getStatusClass(training.status)"
-                    class="px-2 py-1 rounded text-sm">
+                    class="badge rounded-pill">
                 {{ training.status }}
               </span>
-        <button
-          [routerLink]="[training.id]"
-          class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
-          Detail
-        </button>
+            </div>
+
+            <!-- Training Details -->
+            <div class="mb-3">
+              <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-person-circle text-primary me-2"></i>
+                <span class="text-muted">Trenér:</span>
+                <span class="ms-2">{{ training.coach.firstName }} {{ training.coach.lastName }}</span>
+              </div>
+
+              <div class="d-flex align-items-center">
+                <i class="bi bi-geo-alt-fill text-success me-2"></i>
+                <span class="text-muted">Kurt:</span>
+                <span class="ms-2">{{ training.court.name }}</span>
+              </div>
+            </div>
+
+            <!-- Players Section if needed -->
+            <div class="mb-3" *ngIf="training.players?.length">
+              <div class="d-flex align-items-center">
+                <i class="bi bi-people-fill text-info me-2"></i>
+                <span class="text-muted">Hráči:</span>
+                <span class="ms-2">{{ training.players.length }}</span>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-end mt-3">
+              <button [routerLink]="[training.id]"
+                      class="btn btn-outline-primary btn-sm d-flex align-items-center gap-2">
+                <i class="bi bi-eye"></i>
+                Detail
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!trainings?.length" class="text-center py-5">
+      <i class="bi bi-calendar-x text-muted" style="font-size: 3rem;"></i>
+      <p class="mt-3 text-muted">Žádné tréninky k zobrazení</p>
     </div>
   </div>
 </div>

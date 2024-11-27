@@ -1,78 +1,132 @@
+/* app.component.css */
 .app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: url('../assets/tennis-background.jpeg') no-repeat center center fixed;
   background-size: cover;
-  min-height: 100vh;
 }
 
-.bg-dark-transparent {
-  background-color: rgba(33, 37, 41, 0.4) !important;
+/* Navbar Styles */
+.navbar-glass {
+  background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-  .navbar-brand, .nav-link {
-    color: white;
-    transition: color 0.3s ease;
-
-    &:hover {
-      color: rgba(255, 255, 255, 0.9);
-    }
-  }
-
-  .active {
-    color: #28a745 !important;
-  }
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem 0;
 }
 
-.content-wrapper {
-  position: relative;
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  margin-right: 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50px;
+  transition: all 0.2s;
+}
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: rgba(255, 255, 255, 0.1);
-    z-index: 0;
-  }
+.navbar-brand:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
 
-  .container {
-    position: relative;
-    z-index: 1;
-  }
+
+.navbar-brand i {
+  color: #28a745;
+}
+
+.navbar-brand img {
+  height: 40px;
+  margin-right: 12px;
+}
+
+.navbar-toggler {
+  border: none;
+  padding: 0.5rem;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Navigation Links */
+.nav-link {
+  color: black;
+  font-weight: 500;
+  font-size: 1.2rem;
+  padding: 0.7rem 1.2rem;
+  transition: all 0.2s;
+  border-radius: 50px;
+  margin: 0 0.3rem;
+}
+
+.nav-link:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+
+.nav-link.active {
+  color: white !important;
+  background: rgba(255, 255, 255, 0.15);
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* User Menu */
+.user-menu {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50px;
+  padding: 0.5rem 1.5rem;
+}
+
+.user-menu:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
 }
 
 .dropdown-menu {
-  border: none;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  background-color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  z-index: 1050 !important;
-
-  .dropdown-item {
-    padding: 0.5rem 1.5rem;
-
-    &:hover {
-      background-color: rgba(248, 249, 250, 0.9);
-    }
-
-    &:active {
-      background-color: rgba(233, 236, 239, 0.9);
-    }
-  }
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-footer {
-  background-color: rgba(33, 37, 41, 0.4) !important;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+.dropdown-item {
+  padding: 0.75rem 1.5rem;
+  color: #4a5568;
+  transition: all 0.2s;
+}
+
+.dropdown-item:hover {
+  background: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding-top: 76px; /* navbar height */
+  position: relative;
+}
+
+/* Auth Buttons */
+.nav-auth .btn {
+  padding: 0.5rem 1.25rem;
+  font-weight: 500;
 }
 
 .btn-success {
   background: linear-gradient(to right, #28a745, #20c997);
   border: none;
-  padding: 0.5rem 1.5rem;
   transition: all 0.2s;
 }
 
@@ -81,7 +135,41 @@ footer {
   transform: translateY(-1px);
 }
 
-.bi {
-  font-size: 1.1rem;
-  vertical-align: -0.125em;
+.btn-outline-light {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.btn-outline-light:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: white;
+}
+
+/* Footer */
+.footer {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 1rem 0;
+  margin-top: auto;
+}
+
+/* Responsive */
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    background: rgba(33, 37, 41, 0.95);
+    backdrop-filter: blur(10px);
+    margin: 1rem -1rem -1rem;
+    padding: 1rem;
+    border-radius: 15px;
+  }
+
+  .nav-auth {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .nav-auth .btn {
+    flex: 1;
+  }
 }
