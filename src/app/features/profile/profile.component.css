@@ -1,0 +1,24 @@
+.profile-info .row {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.profile-info .row:last-child {
+  border-bottom: none;
+}
+
+.form-control:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.2rem rgba(40,167,69,.25);
+}
+
+.btn-success {
+  background: linear-gradient(to right, #28a745, #20c997);
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn-success:hover {
+  background: linear-gradient(to right, #218838, #1e7e34);
+  transform: translateY(-1px);
+}

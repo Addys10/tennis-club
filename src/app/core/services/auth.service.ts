@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '@env/environment';
 import { User, AuthResponse } from '../models/auth.model';
+import {Profile} from '@core/models/profile.model';
 
 @Injectable({
   providedIn: 'root'
@@ -67,5 +68,13 @@ export class AuthService {
       .pipe(
         tap(response => this.handleAuthSuccess(response))
       );
+  }
+
+  getProfile(): Observable<Profile> {
+    return this.http.get<Profile>(`${environment.apiUrl}/auth/profile`);
+  }
+
+  updateProfile(data: Partial<Profile>): Observable<Profile> {
+    return this.http.patch<Profile>(`${environment.apiUrl}/auth/profile`, data);
   }
 }

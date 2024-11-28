@@ -12,6 +12,7 @@ import {JwtInterceptor} from '@core/jwt.interceptor';
 import {UserManagementModule} from '@features/user-management/user-management.module';
 import {CourtsModule} from '@features/courts/courts.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {ProfileModule} from '@features/profile/profile.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,6 +28,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     UserManagementModule,
     CourtsModule,
     NgbModule,
+    ProfileModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

@@ -3,6 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {DashboardComponent} from '@features/dashboard/dashboard.component';
 import {AuthGuard} from '@core/auth.guard';
 import {UserManagementComponent} from '@features/user-management/user-management.component';
+import {ProfileComponent} from '@features/profile/profile.component';
 
 const routes: Routes = [
   // Veřejné routy
@@ -32,6 +33,11 @@ const routes: Routes = [
   {
     path: 'courts',
     loadChildren: () => import('./features/courts/courts.module').then(m => m.CourtsModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
     canActivate: [AuthGuard]
   },
   // Default routa

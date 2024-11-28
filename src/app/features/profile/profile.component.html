@@ -1,0 +1,77 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">Můj profil</h2>
+            <button class="btn btn-outline-primary" (click)="isEditing = !isEditing" *ngIf="!isEditing">
+              <i class="bi bi-pencil me-2"></i>Upravit
+            </button>
+          </div>
+
+          <div *ngIf="loading" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Načítání...</span>
+            </div>
+          </div>
+
+          <ng-container *ngIf="!loading && profile">
+            <!-- Zobrazení profilu -->
+            <div *ngIf="!isEditing" class="profile-info">
+              <div class="row mb-3">
+                <div class="col-md-4 text-muted">Jméno</div>
+                <div class="col-md-8">{{profile.firstName}} {{profile.lastName}}</div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-4 text-muted">Email</div>
+                <div class="col-md-8">{{profile.email}}</div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-4 text-muted">Telefon</div>
+                <div class="col-md-8">{{profile.phone || '-'}}</div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-4 text-muted">Role</div>
+                <div class="col-md-8">{{profile.role}}</div>
+              </div>
+            </div>
+
+            <!-- Editace profilu -->
+            <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" *ngIf="isEditing">
+              <div class="mb-3">
+                <label class="form-label">Jméno</label>
+                <input type="text" class="form-control" formControlName="firstName">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Příjmení</label>
+                <input type="text" class="form-control" formControlName="lastName">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" formControlName="email">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Telefon</label>
+                <input type="tel" class="form-control" formControlName="phone">
+              </div>
+
+              <div class="d-flex gap-2 justify-content-end">
+                <button type="button" class="btn btn-outline-secondary" (click)="isEditing = false">
+                  Zrušit
+                </button>
+                <button type="submit" class="btn btn-success" [disabled]="profileForm.invalid || loading">
+                  <span class="spinner-border spinner-border-sm me-2" *ngIf="loading"></span>
+                  Uložit
+                </button>
+              </div>
+            </form>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

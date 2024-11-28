@@ -3,7 +3,7 @@
   <nav class="navbar navbar-expand-lg navbar-glass fixed-top">
     <div class="container">
       <!-- Logo -->
-      <a class="navbar-brand" routerLink="/">
+      <a class="navbar-brand">
         <img src="./assets/JCS_OPAVA_Logo_RGB.png" alt="SK JC SPORT Opava">
         SK JC SPORT Opava
       </a>
@@ -18,36 +18,25 @@
 
       <!-- Navigation Items -->
       <div class="navbar-collapse" [class.show]="!isNavbarCollapsed">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <ul class="navbar-nav me-auto" *ngIf="isAuthenticated">
           <li class="nav-item">
-            <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">
-              <i class="bi bi-speedometer2 me-1"></i>
-              Dashboard
-            </a>
+            <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" routerLink="/courts" routerLinkActive="active">
-              <i class="bi bi-geo-alt me-1"></i>
-              Kurty
-            </a>
+            <a class="nav-link" routerLink="/courts" routerLinkActive="active">Kurty</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" routerLink="/trainings" routerLinkActive="active">
-              <i class="bi bi-calendar-check me-1"></i>
-              Tréninky
-            </a>
+            <a class="nav-link" routerLink="/trainings" routerLinkActive="active">Tréninky</a>
           </li>
+          <!-- Správa uživatelů pouze pro adminy -->
           <li class="nav-item" *ngIf="isAdmin">
-            <a class="nav-link" routerLink="/users" routerLinkActive="active">
-              <i class="bi bi-people me-1"></i>
-              Správa uživatelů
-            </a>
+            <a class="nav-link" routerLink="/users" routerLinkActive="active">Správa uživatelů</a>
           </li>
         </ul>
 
         <!-- Auth Section -->
-        <div class="nav-auth" *ngIf="!currentUser">
-          <a class="btn btn-outline-light me-2" routerLink="/auth/login">
+        <div class="nav-auth ms-auto" *ngIf="!currentUser">
+          <a class="btn btn-success me-2" routerLink="/auth/login">
             <i class="bi bi-box-arrow-in-right me-1"></i>
             Přihlášení
           </a>
