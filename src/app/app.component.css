@@ -65,14 +65,14 @@
 }
 
 .nav-link:hover {
-  color: white;
+  color: green;
   background: rgba(255, 255, 255, 0.1);
   transform: translateY(-1px);
 }
 
 
 .nav-link.active {
-  color: white !important;
+  color: green !important;
   background: rgba(255, 255, 255, 0.15);
   font-weight: 600;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -89,7 +89,7 @@
 
 .user-menu:hover {
   background: rgba(255, 255, 255, 0.2);
-  color: white;
+  color: green;
 }
 
 .dropdown-menu {
